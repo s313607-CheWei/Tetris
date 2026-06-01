@@ -83,7 +83,7 @@
             font-weight: bold;
         }
 
-        /* 🛠️ 修正重點：利用 CSS 變數動態控制對話框與小箭頭顏色，絕不穿幫 */
+        /* ✨ 完美動態顏色控制 */
         .speech-bubble.bubble-nazuna {
             border: 2px solid #bf55ec;
             box-shadow: 0 0 15px #bf55ec;
@@ -93,7 +93,7 @@
             box-shadow: 0 0 15px #00bfff;
         }
 
-        /* 箭頭共用設定 */
+        /* 箭頭共用底層設定 */
         .speech-bubble::after, .speech-bubble::before {
             content: ''; position: absolute; bottom: -10px; left: 30px;
             border-width: 10px 10px 0; border-style: solid;
@@ -104,7 +104,7 @@
             z-index: 2;
         }
 
-        /* 修正：讓小箭頭的外邊框顏色完美同步 */
+        /* ✨ 徹底修復：讓箭頭小尖角邊框的外觀顏色完全同步角色 */
         .speech-bubble.bubble-nazuna::before {
             border-color: #bf55ec transparent;
             bottom: -13px; left: 29px; border-width: 11px 11px 0; z-index: 1;
@@ -144,8 +144,8 @@
         .char-card img {
             position: absolute;
             bottom: 0;
-            max-width: 90%;
-            max-height: 90%;
+            max-width: 85%;
+            max-height: 85%;
             object-fit: contain;
             filter: brightness(0.3) grayscale(70%);
             transition: all 0.3s ease;
@@ -295,12 +295,12 @@
 
             <div class="char-card active-nazuna" id="card-nazuna" onclick="switchCharacter('nazuna')">
                 <div class="char-name-tag">NAZUNA / 七草薺</div>
-                <img src="https://images.uncyc.org/commons/c/c9/Nazuna_Nanakusa.png" alt="七草薺">
+                <img src="https://i.ibb.co/3mSyk8D/nazuna.png" alt="七草薺">
             </div>
 
             <div class="char-card" id="card-kou" onclick="switchCharacter('kou')">
                 <div class="char-name-tag">KOU / 夜守更</div>
-                <img src="https://r2.erofus.com/char/85223/original.png" alt="夜守更">
+                <img src="https://i.ibb.co/Z1Q7bZz/kou-normal.png" alt="夜守更">
             </div>
             
         </div>
@@ -478,7 +478,6 @@
         let currentPiece = { matrix: null, x: 0, y: 0, colorIndex: 0 };
         let nextPieceId = 1;
 
-        // 🛠️ 修正：點擊切換時，對話框樣式類別跟著改變，完美修復箭頭顏色殘留 bug
         function switchCharacter(char) {
             currentCharacter = char;
             
@@ -491,13 +490,13 @@
                 cardKou.className = "char-card";
                 mainContainer.style.borderColor = "#bf55ec";
                 mainContainer.style.boxShadow = "0 0 25px rgba(191, 85, 236, 0.5)";
-                speechBubble.className = "speech-bubble bubble-nazuna"; // 切換為薺樣式
+                speechBubble.className = "speech-bubble bubble-nazuna"; 
             } else {
                 cardNazuna.className = "char-card";
                 cardKou.className = "char-card active-kou";
                 mainContainer.style.borderColor = "#00bfff";
                 mainContainer.style.boxShadow = "0 0 25px rgba(0, 191, 255, 0.5)";
-                speechBubble.className = "speech-bubble bubble-kou"; // 切換為更樣式
+                speechBubble.className = "speech-bubble bubble-kou"; 
             }
             triggerSpeech('idle');
         }
@@ -600,7 +599,6 @@
             ctx.strokeRect(x * BLOCK_W, y * BLOCK_H, BLOCK_W, BLOCK_H);
         }
 
-        // 螢光白落點預測框
         function drawGhostBlock(x, y) {
             ctx.strokeStyle = bombActive ? '#ffbe76' : '#ffffff'; 
             ctx.shadowColor = bombActive ? '#e67e22' : '#ffffff';
@@ -732,7 +730,7 @@
                     const kouImg = document.querySelector('#card-kou img');
                     const kouTag = document.querySelector('#card-kou .char-name-tag');
                     if (level >= 4) {
-                        kouImg.src = 'https://i.imgur.com/K2YwZ4K.png'; // 覺醒阿更網址
+                        kouImg.src = 'https://i.ibb.co/3kWwXbV/kou-vampire.png'; // 穩定的覺醒阿更網址
                         kouTag.innerText = "KOU / 夜守更(半吸血鬼)";
                     }
                     
@@ -868,7 +866,7 @@
             bombActive = false;
             document.body.className = "lvl-1";
             
-            document.querySelector('#card-kou img').src = 'https://r2.erofus.com/char/85223/original.png';
+            document.querySelector('#card-kou img').src = 'https://i.ibb.co/Z1Q7bZz/kou-normal.png';
             document.querySelector('#card-kou .char-name-tag').innerText = "KOU / 夜守更";
             bombBtn.classList.remove('skill-active');
             
