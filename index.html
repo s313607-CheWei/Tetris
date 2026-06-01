@@ -341,12 +341,12 @@
             .stage-wrapper { flex-direction: column; align-items: center; gap: 10px; width: 100%; }
             .char-selector-area { width: 90%; max-width: 340px; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; }
             .speech-bubble { width: 100%; min-height: 35px; font-size: 12px; padding: 8px; }
-            .speech-bubble::after, .speech-bubble::before { display: none; } /* 手機板隱藏對話框小箭頭 */
+            .speech-bubble::after, .speech-bubble::before { display: none; }
             .char-card { height: 90px; flex: 1; min-width: 140px; }
             .char-card img { max-height: 95%; max-width: 95%; }
             .char-name-tag { font-size: 9px; top: 5px; left: 5px; padding: 1px 4px; }
             .game-container { padding: 10px; gap: 10px; width: 90%; max-width: 340px; box-sizing: border-box; }
-            #game-board { width: 140px; height: 318px; } /* 手機縮小畫布適配螢幕 */
+            #game-board { width: 140px; height: 318px; }
             .side-panel { width: 150px; }
             .info-box { padding: 4px 8px; margin-bottom: 4px; }
             .info-box h3 { font-size: 9px; }
@@ -356,8 +356,8 @@
             .leaderboard-box h3 { font-size: 10px; }
             .leaderboard-list { font-size: 10px; }
             .btn { padding: 6px; font-size: 11px; margin-top: 3px; }
-            .instructions { display: none; } /* 手機板隱藏鍵盤說明 */
-            .mobile-controls { display: block; } /* 手機板顯示虛擬按鍵 */
+            .instructions { display: none; }
+            .mobile-controls { display: block; }
         }
     </style>
 </head>
@@ -367,17 +367,20 @@
 
     <div class="stage-wrapper">
         
+        <!-- 🎭 左側：角色切換與動態對話區 -->
         <div class="char-selector-area">
             
             <div class="speech-bubble bubble-nazuna" id="char-speech">
                 今晚，我們一起「徹夜之歌」吧！
             </div>
 
+            <!-- 七草薺卡片 -->
             <div class="char-card active-nazuna" id="card-nazuna" onclick="switchCharacter('nazuna')">
                 <div class="char-name-tag">NAZUNA / 七草薺</div>
                 <img src="https://storage.moegirl.tw/moegirl/commons/2/20/Yofukashi_nazuna_face_2.png" alt="七草薺">
             </div>
 
+            <!-- 夜守更卡片 -->
             <div class="char-card" id="card-kou" onclick="switchCharacter('kou')">
                 <div class="char-name-tag">KOU / 夜守更</div>
                 <img src="https://storage.moegirl.org.cn/moegirl/commons/f/f4/Yofukashi_kou_face_2.png" alt="夜守更">
@@ -385,6 +388,7 @@
             
         </div>
 
+        <!-- 遊戲中央主容器 -->
         <div class="game-container" id="main-container">
             <canvas id="game-board" width="220" height="500"></canvas>
 
@@ -433,24 +437,28 @@
         </div>
     </div>
 
+    <!-- 📱 行動裝置虛擬控制按鍵區 (已對調旋轉與瞬落) -->
     <div class="mobile-controls">
         <div class="touch-row">
             <button class="t-btn t-skill" id="m-skill-q" onclick="useUltimateSkill()">全清Q</button>
             <button class="t-btn t-skill" id="m-skill-e" onclick="activateBombSkill()" style="border-color:#e67e22;">炸彈E</button>
         </div>
         <div class="touch-row">
+            <!-- 左手組：移動與旋轉變形 -->
             <div class="touch-group">
                 <button class="t-btn" onclick="handleMobileInput('left')">◀</button>
                 <button class="t-btn" onclick="handleMobileInput('right')">▶</button>
-                <button class="t-btn" onclick="handleMobileInput('drop')" style="border-color:#00f5ff; font-size:14px;">瞬落</button>
+                <button class="t-btn t-action" onclick="handleMobileInput('rotate')" style="width:60px; height:60px; font-size:16px;">旋轉</button>
             </div>
+            <!-- 右手組：下落速度控制 -->
             <div class="touch-group">
-                <button class="t-btn t-action" onclick="handleMobileInput('rotate')">旋轉</button>
-                <button class="t-btn t-action" onclick="handleMobileInput('down')" style="background:rgba(255,255,255,0.1);">▼</button>
+                <button class="t-btn" onclick="handleMobileInput('down')" style="background:rgba(255,255,255,0.1);">▼</button>
+                <button class="t-btn t-action" onclick="handleMobileInput('drop')" style="border-color:#00f5ff; font-size:15px;">瞬落</button>
             </div>
         </div>
     </div>
 
+    <!-- 開局首頁操作教學彈窗 -->
     <div id="welcome-modal" class="modal" style="display: flex;">
         <div class="modal-content" style="border-color: #00f5ff; box-shadow: 0 0 35px #00f5ff;">
             <h2 style="color: #00f5ff; margin-top: 0; letter-spacing: 2px;">🌙 徹夜之歌：夜行方塊</h2>
@@ -458,16 +466,12 @@
             
             <div class="tutorial-grid">
                 <div>
-                    <div class="tutorial-title">移動按鍵</div>
-                    <div style="color: #bdc3c7;">◀ ▶ 控制左右移動</div>
+                    <div class="tutorial-title">左手操作</div>
+                    <div style="color: #bdc3c7;">◀ ▶ 移動 + 旋轉形狀</div>
                 </div>
                 <div>
-                    <div class="tutorial-title">旋轉按鍵</div>
-                    <div style="color: #bdc3c7;">旋轉方塊改變形狀</div>
-                </div>
-                <div>
-                    <div class="tutorial-title">▼ 鍵 / 瞬落</div>
-                    <div style="color: #bdc3c7;">加速下落或瞬間接地</div>
+                    <div class="tutorial-title">右手操作</div>
+                    <div style="color: #bdc3c7;">▼ 加速落 / 瞬落接地</div>
                 </div>
                 <div>
                     <div class="tutorial-title">夜行專屬技能</div>
@@ -479,6 +483,7 @@
         </div>
     </div>
 
+    <!-- 結算/晉級 彈窗 -->
     <div id="game-modal" class="modal">
         <div class="modal-content">
             <h2 id="modal-title">遊戲結束</h2>
@@ -512,7 +517,6 @@
         const ROW = 20;
         const COL = 10;
         
-        // ✨ 動態計算手機或桌機的單格寬高，讓響應式更精準
         let BLOCK_W = canvas.width / COL; 
         let BLOCK_H = canvas.height / ROW; 
 
@@ -602,7 +606,6 @@
         function initGrid() {
             grid = [];
             for (let r = 0; r < ROW; r++) { grid[r] = new Array(COL).fill(0); }
-            // 重新計算格線大小
             BLOCK_W = canvas.width / COL;
             BLOCK_H = canvas.height / ROW;
         }
@@ -1067,7 +1070,6 @@
             isPaused = false; 
         }
 
-        // 偵測螢幕大小變動時自動重新校正畫布格線
         window.addEventListener('resize', () => {
             BLOCK_W = canvas.width / COL;
             BLOCK_H = canvas.height / ROW;
