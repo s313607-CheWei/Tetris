@@ -20,78 +20,154 @@
             background-size: 40px 40px;
         }
 
-        /* 徹夜之歌迷幻深夜風背景 */
+        /* 徹夜之歌迷幻霓虹背景 */
         body.lvl-1 {
             background-color: #04060a;
-            background-image: linear-gradient(to right, rgba(155, 89, 182, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(155, 89, 182, 0.03) 1px, transparent 1px);
+            background-image: linear-gradient(to right, rgba(155, 89, 182, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(155, 89, 182, 0.1) 1px, transparent 1px);
         }
         body.lvl-2 {
             background-color: #06050a;
-            background-image: linear-gradient(to right, rgba(52, 152, 219, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(52, 152, 219, 0.03) 1px, transparent 1px);
+            background-image: linear-gradient(to right, rgba(52, 152, 219, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(52, 152, 219, 0.1) 1px, transparent 1px);
         }
         body.lvl-3 {
             background-color: #0a050e;
-            background-image: linear-gradient(to right, rgba(142, 68, 173, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(142, 68, 173, 0.03) 1px, transparent 1px);
+            background-image: linear-gradient(to right, rgba(142, 68, 173, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(142, 68, 173, 0.1) 1px, transparent 1px);
         }
         body.lvl-4 {
             background-color: #0c0412;
-            background-image: linear-gradient(to right, rgba(231, 76, 60, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(231, 76, 60, 0.03) 1px, transparent 1px);
+            background-image: linear-gradient(to right, rgba(231, 76, 60, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(231, 76, 60, 0.1) 1px, transparent 1px);
         }
         body.lvl-5 {
             background-color: #100212;
-            background-image: linear-gradient(to right, rgba(241, 196, 15, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(241, 196, 15, 0.04) 1px, transparent 1px);
+            background-image: linear-gradient(to right, rgba(241, 196, 15, 0.12) 1px, transparent 1px), linear-gradient(to bottom, rgba(241, 196, 15, 0.12) 1px, transparent 1px);
         }
 
         h1 {
             margin: 0 0 15px 0;
             font-size: 32px;
-            text-shadow: 0 0 10px rgba(155, 89, 182, 0.4);
+            text-shadow: 0 0 15px rgba(155, 89, 182, 0.8), 0 0 5px rgba(155, 89, 182, 0.5);
             letter-spacing: 4px;
         }
 
         /* 總舞台 */
         .stage-wrapper {
             display: flex;
-            align-items: flex-end;
-            gap: 20px;
+            align-items: flex-start;
+            gap: 25px;
             max-width: 1200px;
         }
 
-        /* 角色欄 */
-        .anime-char {
-            width: 180px;
-            height: 500px;
+        /* 🎭 角色選擇與互動對話區容器 */
+        .char-selector-area {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 200px;
+        }
+
+        /* 動態霓虹對話框 */
+        .speech-bubble {
+            position: relative;
+            background: rgba(20, 24, 35, 0.95);
+            border: 2px solid #9b59b6;
+            box-shadow: 0 0 15px rgba(155, 89, 182, 0.5);
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 13px;
+            line-height: 1.4;
+            color: #fff;
+            min-height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            user-select: none;
-            pointer-events: none;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        /* 對話框的小箭頭 */
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 30px;
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: rgba(20, 24, 35, 0.95) transparent;
+            display: block;
+            width: 0;
+        }
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -13px;
+            left: 29px;
+            border-width: 11px 11px 0;
+            border-style: solid;
+            border-color: #9b59b6 transparent;
+            display: block;
+            width: 0;
+        }
+
+        /* 單個角色按鈕卡片 */
+        .char-card {
+            height: 200px;
             border-radius: 12px;
-            background: rgba(155, 89, 182, 0.01);
-            border: 1px dashed rgba(155, 89, 182, 0.1);
+            background: rgba(10, 12, 18, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
         }
-        .anime-char img {
+        .char-card:hover {
+            transform: translateY(-3px);
+            background: rgba(15, 18, 28, 0.8);
+        }
+        /* 被選中時的高亮霓虹特效 */
+        .char-card.active-nazuna {
+            border-color: #9b59b6;
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.6);
+            background: rgba(155, 89, 182, 0.05);
+        }
+        .char-card.active-kou {
+            border-color: #3498db;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.6);
+            background: rgba(52, 152, 219, 0.05);
+        }
+        .char-card img {
             position: absolute;
             bottom: 0;
             max-width: 100%;
-            max-height: 100%;
+            max-height: 90%;
             object-fit: contain;
-            filter: drop-shadow(0 5px 15px rgba(155, 89, 182, 0.3));
-            transition: all 0.5s ease;
-            z-index: 2;
+            filter: grayscale(60%);
+            transition: all 0.3s ease;
         }
-        .char-fallback-text {
-            font-size: 24px;
+        .char-card.active-nazuna img, .char-card.active-kou img {
+            filter: grayscale(0%) drop-shadow(0 0 10px rgba(255,255,255,0.2));
+        }
+        .char-name-tag {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
             font-weight: bold;
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            letter-spacing: 6px;
-            color: rgba(255, 255, 255, 0.7);
-            text-shadow: 0 0 8px rgba(155, 89, 182, 0.5);
-            opacity: 0.6;
-            z-index: 1;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .active-nazuna .char-name-tag { color: #9b59b6; border-color: #9b59b6; }
+        .active-kou .char-name-tag { color: #3498db; border-color: #3498db; }
+
+        .char-fallback-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            opacity: 0.7;
         }
 
         /* 遊戲中央主容器 */
@@ -103,17 +179,17 @@
             border-radius: 16px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.9);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(155, 89, 182, 0.1);
+            border: 2px solid #9b59b6;
+            box-shadow: 0 0 25px rgba(155, 89, 182, 0.4);
         }
 
-        /* 護眼高對比白框 */
+        /* 經典方塊比例遊戲板 */
         #game-board {
             width: 220px;
             height: 500px;
-            border: 3.5px solid #ffffff; 
+            border: 2px solid rgba(255, 255, 255, 0.2); 
             background-color: rgba(6, 7, 12, 0.98);
             border-radius: 8px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.95), 0 0 12px rgba(255, 255, 255, 0.2);
         }
 
         /* 側邊資訊面板 */
@@ -129,13 +205,14 @@
             padding: 8px 12px;
             border-radius: 8px;
             margin-bottom: 6px;
-            border: 1px solid rgba(155, 89, 182, 0.15);
+            border: 1px solid rgba(155, 89, 182, 0.3);
+            box-shadow: 0 0 10px rgba(155, 89, 182, 0.1);
         }
 
         .info-box h3 {
             margin: 0 0 4px 0;
             font-size: 11px;
-            color: #8f88d4;
+            color: #b3a7ff;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -145,7 +222,7 @@
             font-size: 18px;
             font-weight: bold;
             color: #00cec9;
-            text-shadow: 0 0 6px rgba(0, 206, 201, 0.3);
+            text-shadow: 0 0 10px rgba(0, 206, 201, 0.6);
         }
 
         #next-box {
@@ -158,7 +235,8 @@
         /* 排行榜 */
         .leaderboard-box {
             background: rgba(6, 7, 12, 0.85);
-            border: 1px solid rgba(241, 196, 15, 0.6);
+            border: 1px solid rgba(241, 196, 15, 0.8);
+            box-shadow: 0 0 10px rgba(241, 196, 15, 0.2);
             border-radius: 8px;
             padding: 8px 12px;
             margin-bottom: 6px;
@@ -168,6 +246,7 @@
             font-size: 12px;
             color: #f1c40f;
             text-align: center;
+            text-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
         }
         .leaderboard-list {
             margin: 0;
@@ -214,7 +293,7 @@
         
         .skill-active {
             animation: pulse 0.8s infinite;
-            box-shadow: 0 0 10px #e67e22 !important;
+            box-shadow: 0 0 15px #e67e22 !important;
         }
         @keyframes pulse {
             0% { opacity: 1; }
@@ -225,11 +304,11 @@
         .instructions {
             margin-top: 8px;
             font-size: 11px;
-            color: #95a5a6;
+            color: #a4b0be;
             line-height: 1.4;
         }
 
-        /* 彈窗基礎 */
+        /* 彈窗 */
         .modal {
             display: none;
             position: fixed;
@@ -248,7 +327,7 @@
             max-width: 400px;
             width: 85%;
             border: 2px solid #9b59b6;
-            box-shadow: 0 0 30px rgba(155, 89, 182, 0.3);
+            box-shadow: 0 0 30px rgba(155, 89, 182, 0.5);
         }
 
         .modal-input {
@@ -263,7 +342,6 @@
             text-align: center;
         }
 
-        /* ✨ 獨特的首頁教學排版風格 */
         .tutorial-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -288,12 +366,28 @@
     <h1>俄羅斯方塊</h1>
 
     <div class="stage-wrapper">
-        <div class="anime-char">
-            <span class="char-fallback-text" id="text-left">七草薺</span>
-            <img id="char-left" src="nazuna.png" alt="七草薺" onload="document.getElementById('text-left').style.display='none';" onerror="this.style.display='none';">
+        
+        <div class="char-selector-area">
+            
+            <div class="speech-bubble" id="char-speech">
+                今晚，我們一起「徹夜之歌」吧！
+            </div>
+
+            <div class="char-card active-nazuna" id="card-nazuna" onclick="switchCharacter('nazuna')">
+                <div class="char-name-tag">NAZUNA / 七草薺</div>
+                <span class="char-fallback-text" id="text-left">七草薺</span>
+                <img src="nazuna.png" alt="七草薺" onload="document.getElementById('text-left').style.display='none';" onerror="this.style.display='none';">
+            </div>
+
+            <div class="char-card" id="card-kou" onclick="switchCharacter('kou')">
+                <div class="char-name-tag">KOU / 夜守更</div>
+                <span class="char-fallback-text" id="text-right">夜守更</span>
+                <img src="kou_normal.png" alt="夜守更" onload="document.getElementById('text-right').style.display='none';" onerror="this.style.display='none';">
+            </div>
+            
         </div>
 
-        <div class="game-container">
+        <div class="game-container" id="main-container">
             <canvas id="game-board" width="220" height="500"></canvas>
 
             <div class="side-panel">
@@ -339,17 +433,12 @@
                 </div>
             </div>
         </div>
-
-        <div class="anime-char">
-            <span class="char-fallback-text" id="text-right">夜守更</span>
-            <img id="char-right" src="kou_normal.png" alt="夜守更" onload="document.getElementById('text-right').style.display='none';" onerror="this.style.display='none';">
-        </div>
     </div>
 
     <div id="welcome-modal" class="modal" style="display: flex;">
-        <div class="modal-content" style="border-color: #00cec9; box-shadow: 0 0 30px rgba(0, 206, 201, 0.2);">
+        <div class="modal-content" style="border-color: #00cec9; box-shadow: 0 0 30px rgba(0, 206, 201, 0.4);">
             <h2 style="color: #00cec9; margin-top: 0; letter-spacing: 2px;">🌙 徹夜之歌：夜行方塊</h2>
-            <p style="font-size: 14px; color: #b2bec3; line-height: 1.5; margin-bottom: 0;">歡迎來到深夜的世界。與七草薺和夜守更一起，在方塊完全重疊前消滅它們吧！</p>
+            <p style="font-size: 14px; color: #b2bec3; line-height: 1.5; margin-bottom: 0;">歡迎來到深夜的世界。在左側選擇你的夜行夥伴，一起打破長夜的方塊吧！</p>
             
             <div class="tutorial-grid">
                 <div>
@@ -410,12 +499,10 @@
         const skillBtn = document.getElementById('skill-btn');
         const bombBtn = document.getElementById('bomb-btn');
         const playerNameField = document.getElementById('player-name-field');
-        const charRightImg = document.getElementById('char-right');
-        const textRightSpan = document.getElementById('text-right');
+        const speechBubble = document.getElementById('char-speech');
 
         const ROW = 20;
         const COL = 10;
-        
         const BLOCK_W = 22; 
         const BLOCK_H = 25; 
 
@@ -438,6 +525,23 @@
         const SPEED_LEVELS = { 1: 800, 2: 600, 3: 400, 4: 250, 5: 120 };
         const LEVEL_THRESHOLDS = { 1: 1000, 2: 3000, 3: 6000, 4: 10000, 5: 15000 };
 
+        // 🎭 夥伴系統資料庫
+        let currentCharacter = 'nazuna';
+        const QUOTES = {
+            nazuna: {
+                idle: ["今晚，我們一起「徹夜之歌」吧！", "怎麼啦？不點開始，是在眷戀白天的世界嗎？", "熬夜，可是人類在對白天進行叛逆啊。"],
+                clear: ["哼，這手速勉強能拿個及格分吧！", "不錯嘛！方塊被消掉的聲音真讓人興奮。", "再來再來！黑夜才剛剛開始呢！"],
+                levelup: ["哎呀，四周的顏色變了...你心跳是不是加速了？", "等級提升了！打起精神來，別死掉喔。"],
+                gameover: ["哎呀～太陽升起來了呢，今天就到此為止吧。", "輸掉了嗎？真可惜，不過今晚很好玩喔。"]
+            },
+            kou: {
+                idle: ["我...想變得更了解夜晚！", "只要跟著你，我是不是也能學會享受熬夜？", "點擊開始遊戲吧，我想看看夜晚的極限。"],
+                clear: ["哇！太厲害了，原來還可以這樣消除！", "好流暢的操作...這就是夜行者的實力嗎？", "感覺熱血沸騰起來了！"],
+                levelup: ["這就是更深邃的夜晚嗎...氣氛完全變了！", "方塊變快了，加油啊！我們能贏的！"],
+                gameover: ["啊...天亮了，體力到極限了嗎？", "辛苦了！雖然沒能通關，但能一起熬夜真好。"]
+            }
+        };
+
         let grid = [];
         let score = 0;
         let level = 1;
@@ -457,11 +561,43 @@
         let currentPiece = { matrix: null, x: 0, y: 0, colorIndex: 0 };
         let nextPieceId = 1;
 
+        // 🎭 自由切換夥伴函數
+        function switchCharacter(char) {
+            currentCharacter = char;
+            
+            const cardNazuna = document.getElementById('card-nazuna');
+            const cardKou = document.getElementById('card-kou');
+            const mainContainer = document.getElementById('main-container');
+            const bubble = document.getElementById('char-speech');
+
+            if(char === 'nazuna') {
+                cardNazuna.className = "char-card active-nazuna";
+                cardKou.className = "char-card";
+                mainContainer.style.borderColor = "#9b59b6";
+                mainContainer.style.boxShadow = "0 0 25px rgba(155, 89, 182, 0.4)";
+                bubble.style.borderColor = "#9b59b6";
+                bubble.style.boxShadow = "0 0 15px rgba(155, 89, 182, 0.5)";
+            } else {
+                cardNazuna.className = "char-card";
+                cardKou.className = "char-card active-kou";
+                mainContainer.style.borderColor = "#3498db";
+                mainContainer.style.boxShadow = "0 0 25px rgba(52, 152, 219, 0.4)";
+                bubble.style.borderColor = "#3498db";
+                bubble.style.boxShadow = "0 0 15px rgba(52, 152, 219, 0.5)";
+            }
+            triggerSpeech('idle');
+        }
+
+        // 💬 觸發講話台詞
+        function triggerSpeech(type) {
+            const pool = QUOTES[currentCharacter][type];
+            const randomText = pool[Math.floor(Math.random() * pool.length)];
+            speechBubble.innerText = randomText;
+        }
+
         function initGrid() {
             grid = [];
-            for (let r = 0; r < ROW; r++) {
-                grid[r] = new Array(COL).fill(0);
-            }
+            for (let r = 0; r < ROW; r++) { grid[r] = new Array(COL).fill(0); }
         }
 
         function updateLeaderboardUI() {
@@ -481,27 +617,22 @@
             }
         }
 
-        // ✨【重要修正】同名覆蓋機制，防止多筆重複霸榜
         function saveScore(name, finalScore) {
             if(finalScore <= 0) return;
             let records = JSON.parse(localStorage.getItem('tetris_player_records')) || [];
             let finalName = name.trim() || "無名英雄";
             
-            // 尋找排行榜中有沒有一模一樣的名字
             let existingRecordIndex = records.findIndex(r => r.name === finalName);
-            
             if (existingRecordIndex !== -1) {
-                // 如果存在同名，且這次拿更高分，才去覆蓋它
                 if (finalScore > records[existingRecordIndex].score) {
                     records[existingRecordIndex].score = finalScore;
                 }
             } else {
-                // 如果不存在，正常新增一筆資料
                 records.push({ name: finalName, score: finalScore });
             }
             
             records.sort((a, b) => b.score - a.score);
-            records = records.slice(0, 3); // 只留前三名
+            records = records.slice(0, 3);
             localStorage.setItem('tetris_player_records', JSON.stringify(records));
             updateLeaderboardUI();
         }
@@ -556,18 +687,20 @@
             ctx.strokeRect(x * BLOCK_W, y * BLOCK_H, BLOCK_W, BLOCK_H);
         }
 
+        // ✨【視覺重點】高對比、超清晰的霓虹螢光白下落預測框
         function drawGhostBlock(x, y) {
-            ctx.strokeStyle = bombActive ? 'rgba(230, 126, 34, 0.5)' : 'rgba(255, 255, 255, 0.25)'; 
+            ctx.strokeStyle = bombActive ? 'rgba(230, 126, 34, 0.8)' : '#ffffff'; 
+            ctx.shadowColor = bombActive ? '#e67e22' : '#ffffff';
+            ctx.shadowBlur = bombActive ? 4 : 6; // 增加光暈感
             ctx.setLineDash([4, 3]); 
             ctx.strokeRect(x * BLOCK_W + 1, y * BLOCK_H + 1, BLOCK_W - 2, BLOCK_H - 2);
             ctx.setLineDash([]); 
+            ctx.shadowBlur = 0; // 重置光暈以免影響其他畫筆
         }
 
         function getGhostY() {
             let ghostY = currentPiece.y;
-            while (!checkCollision(currentPiece.matrix, currentPiece.x, ghostY + 1)) {
-                ghostY++;
-            }
+            while (!checkCollision(currentPiece.matrix, currentPiece.x, ghostY + 1)) { ghostY++; }
             return ghostY;
         }
 
@@ -640,6 +773,7 @@
                     }
                 }
                 score += 50;
+                triggerSpeech('clear');
                 checkLevelUp();
             } else {
                 for (let r = 0; r < currentPiece.matrix.length; r++) {
@@ -668,6 +802,7 @@
             if (linesClearedThisTurn > 0) {
                 const scoreRewards = [0, 100, 300, 500, 800];
                 score += scoreRewards[linesClearedThisTurn] * level;
+                triggerSpeech('clear'); // 觸發誇獎台詞
                 checkLevelUp();
                 updateUI();
             }
@@ -679,12 +814,16 @@
                     level++;
                     document.body.className = `lvl-${level}`;
                     
+                    // 當夜守更來到第四關（半吸血鬼化覺醒）
+                    const kouImg = document.querySelector('#card-kou img');
+                    const kouTag = document.querySelector('#card-kou .char-name-tag');
                     if (level >= 4) {
-                        charRightImg.src = 'kou_vampire.png';
-                        textRightSpan.innerText = "夜守更(半吸血鬼)";
+                        kouImg.src = 'kou_vampire.png';
+                        kouTag.innerText = "KOU / 夜守更(半吸血鬼)";
                     }
                     
                     updateGameSpeed();
+                    triggerSpeech('levelup'); // 觸發晉級台詞
                     showModal("LEVEL UP", `進入第 ${level} 關，黑夜變得更深邃了...`, true);
                 } else if (score >= LEVEL_THRESHOLDS[5]) {
                     endGame(true);
@@ -724,6 +863,7 @@
             initGrid();
             skillAvailable = false;
             score += 500; 
+            triggerSpeech('clear');
             checkLevelUp();
             updateUI();
             draw();
@@ -767,6 +907,9 @@
                     let mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
                     let secs = (totalSeconds % 60).toString().padStart(2, '0');
                     timeElement.innerText = `${mins}:${secs}`;
+                    
+                    // 每 20 秒夥伴隨機講一次閒置話語
+                    if (totalSeconds % 20 === 0) { triggerSpeech('idle'); }
                 }
             }, 1000);
         }
@@ -796,7 +939,6 @@
             }
         });
 
-        // ✨ 關閉首頁教學並自動開始遊戲
         function closeWelcomeAndStart() {
             document.getElementById('welcome-modal').style.display = 'none';
             startGame();
@@ -813,11 +955,13 @@
             bombAmmo = 20;
             bombActive = false;
             document.body.className = "lvl-1";
-            charRightImg.src = 'kou_normal.png';
-            charRightImg.style.display = 'block'; 
-            textRightSpan.innerText = "夜守更";
+            
+            // 重置阿更圖片
+            document.querySelector('#card-kou img').src = 'kou_normal.png';
+            document.querySelector('#card-kou .char-name-tag').innerText = "KOU / 夜守更";
             bombBtn.classList.remove('skill-active');
             
+            triggerSpeech('idle');
             updateUI();
             startTimer();
             initFirstPieces();
@@ -832,8 +976,9 @@
             gameRunning = false;
             clearInterval(gameInterval);
             clearInterval(timerInterval);
+            
+            triggerSpeech('gameover'); // 觸發結束台詞
 
-            // 如果排行榜內已有上一次輸入的名字，預設填入該名字，否則才隨機
             let records = JSON.parse(localStorage.getItem('tetris_player_records')) || [];
             if(records.length > 0) {
                 playerNameField.value = records[0].name;
@@ -860,10 +1005,10 @@
             
             if (isLevelUpNotice) {
                 inputArea.style.display = 'none';
-                retryBtn.style.display = 'none'; // 升級時不顯示重新遊玩
+                retryBtn.style.display = 'none';
             } else {
                 inputArea.style.display = 'block';
-                retryBtn.style.display = 'block'; // 遊戲結束時顯示重新遊玩
+                retryBtn.style.display = 'block';
             }
             
             document.getElementById('game-modal').style.display = 'flex';
@@ -877,12 +1022,11 @@
             closeModal();
         }
 
-        // ✨【新增】彈窗內直接重新遊玩
         function handleModalRetry() {
             const name = playerNameField.value;
-            saveScore(name, score); // 自動幫玩家儲存當前分數
+            saveScore(name, score);
             closeModal();
-            startGame(); // 重新啟動
+            startGame();
         }
 
         function closeModal() {
