@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>俄羅斯方塊：名留青史版</title>
+    <style>
+        body {
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px 0;
+            overflow-y: auto;
+            transition: background 1s ease, box-shadow 1s ease;
+            background-size: 40px 40px;
+        }
+
+        /* 5 個關卡的專屬科幻背景外觀 */
+        body.lvl-1 {
+            background-color: #111a24;
+            background-image: linear-gradient(to right, rgba(52, 152, 219, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(52, 152, 219, 0.05) 1px, transparent 1px);
+        }
+        body.lvl-2 {
+            background-color: #141f19;
+            background-image: linear-gradient(to right, rgba(46, 204, 113, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(46, 204, 113, 0.05) 1px, transparent 1px);
+        }
+        body.lvl-3 {
+            background-color: #1f1b14;
+            background-image: linear-gradient(to right, rgba(241, 196, 15, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(241, 196, 15, 0.05) 1px, transparent 1px);
+        }
+        body.lvl-4 {
+            background-color: #221625;
+            background-image: linear-gradient(to right, rgba(155, 89, 182, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(155, 89, 182, 0.05) 1px, transparent 1px);
+        }
+        body.lvl-5 {
+            background-color: #241212;
+            background-image: linear-gradient(to right, rgba(231, 76, 60, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(231, 76, 60, 0.08) 1px, transparent 1px);
+        }
+
+        h1 {
+            margin: 0 0 15px 0;
+            font-size: 28px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            letter-spacing: 2px;
+        }
+
+        .game-container {
+            display: flex;
+            gap: 20px;
+            background: rgba(44, 62, 80, 0.85);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        #game-board {
+            border: 3px solid #ecf0f1;
+            background-color: rgba(26, 37, 47, 0.95);
+            border-radius: 6px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+        }
+
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 210px;
+        }
+
+        .info-box {
+            background: rgba(26, 37, 47, 0.8);
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            border: 1px solid rgba(127, 140, 141, 0.5);
+        }
+
+        .info-box h3 {
+            margin: 0 0 3px 0;
+            font-size: 11px;
+            color: #bdc3c7;
+            text-transform: uppercase;
+        }
+
+        .info-box p {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2ecc71;
+            text-shadow: 0 0 5px rgba(46, 204, 113, 0.3);
+        }
+
+        /* 排行榜 */
+        .leaderboard-box {
+            background: rgba(26, 37, 47, 0.9);
+            border: 1px solid #f1c40f;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+        }
+        .leaderboard-box h3 {
+            margin: 0 0 5px 0;
+            font-size: 12px;
+            color: #f1c40f;
+            text-align: center;
+        }
+        .leaderboard-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 13px;
+        }
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .leaderboard-item:last-child { border: none; }
+        .player-name {
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* 按鈕控制 */
+        .btn {
+            color: white;
+            border: none;
+            padding: 9px;
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            margin-top: 6px;
+        }
+
+        .btn:disabled {
+            background-color: #7f8c8d !important;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        #start-btn { background-color: #2ecc71; box-shadow: 0 3px 0 #27ae60; }
+        #start-btn:hover { background-color: #27ae60; }
+
+        #skill-btn { background-color: #9b59b6; box-shadow: 0 3px 0 #8e44ad; }
+        #skill-btn:hover:not(:disabled) { background-color: #8e44ad; }
+
+        #bomb-btn { background-color: #e67e22; box-shadow: 0 3px 0 #d35400; }
+        #bomb-btn:hover:not(:disabled) { background-color: #d35400; }
+        
+        .skill-active {
+            animation: pulse 0.8s infinite;
+            box-shadow: 0 0 15px #e67e22 !important;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .instructions {
+            margin-top: 8px;
+            font-size: 11px;
+            color: #bdc3c7;
+            line-height: 1.4;
+        }
+
+        /* 彈出視窗（增加輸入框樣式） */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .modal-content {
+            background: #34495e;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 350px;
+            border: 2px solid #2ecc71;
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+        }
+
+        .modal-input {
+            width: 80%;
+            padding: 8px;
+            margin: 15px 0 5px 0;
+            border: 2px solid #bdc3c7;
+            border-radius: 4px;
+            background: #2c3e50;
+            color: #fff;
+            font-size: 14px;
+            text-align: center;
+        }
+        .modal-input:focus {
+            border-color: #2ecc71;
+            outline: none;
+        }
+    </style>
+</head>
+<body class="lvl-1">
+
+    <h1>俄羅斯方塊：五關背景大挑戰</h1>
+
+    <div class="game-container">
+        <canvas id="game-board" width="220" height="440"></canvas>
+
+        <div class="side-panel">
+            <div>
+                <div class="leaderboard-box">
+                    <h3>🏆 歷史排行榜 (TOP 3)</h3>
+                    <ul class="leaderboard-list" id="leaderboard">
+                        <li class="leaderboard-item"><span class="player-name">1. 空缺</span><span>0</span></li>
+                        <li class="leaderboard-item"><span class="player-name">2. 空缺</span><span>0</span></li>
+                        <li class="leaderboard-item"><span class="player-name">3. 空缺</span><span>0</span></li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h3>SCORE / 當前分數</h3>
+                    <p id="score">0</p>
+                </div>
+                <div class="info-box">
+                    <h3>TARGET / 晉級目標</h3>
+                    <p id="target-score">1000</p>
+                </div>
+                <div class="info-box">
+                    <h3>LEVEL / 關卡</h3>
+                    <p id="level">1 / 5</p>
+                </div>
+                <div class="info-box">
+                    <h3>TIME / 時間</h3>
+                    <p id="time">00:00</p>
+                </div>
+            </div>
+
+            <div>
+                <button id="skill-btn" class="btn" onclick="useUltimateSkill()">一鍵全清 [Q] (剩1次)</button>
+                <button id="bomb-btn" class="btn" onclick="activateBombSkill()">集群炸彈 [E] (剩20次)</button>
+                <button id="start-btn" class="btn" onclick="startGame()">開始遊戲</button>
+            </div>
+
+            <div class="instructions">
+                <strong>操作說明：</strong><br>
+                • 移動：← ➡️ 或 A / D<br>
+                • 旋轉：⬆️ 或 W | 加速：⬇️ 或 S<br>
+                • 瞬落：空白鍵 (Space)<br>
+                • <b>[Q]</b> 全清 | <b>[E]</b> 炸彈方塊<br>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title">遊戲結束</h2>
+            <p id="modal-desc"></p>
+            <div id="name-input-area">
+                <label for="player-name-field" style="font-size: 13px; color: #bdc3c7;">請輸入榮譽榜大名：</label><br>
+                <input type="text" id="player-name-field" class="modal-input" maxlength="10">
+            </div>
+            <button class="btn" style="background-color: #2ecc71; box-shadow: 0 3px 0 #27ae60;" onclick="handleModalSubmit()">確定並送出</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('game-board');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const targetElement = document.getElementById('target-score');
+        const levelElement = document.getElementById('level');
+        const timeElement = document.getElementById('time');
+        const skillBtn = document.getElementById('skill-btn');
+        const bombBtn = document.getElementById('bomb-btn');
+        const playerNameField = document.getElementById('player-name-field');
+
+        const ROW = 20;
+        const COL = 10;
+        const BLOCK_SIZE = 22;
+
+        const COLORS = [
+            null,
+            '#ff3838', '#2ecc71', '#3498db', '#f1c40f', '#e67e22', '#9b59b6', '#1abc9c'
+        ];
+
+        const SHAPES = [
+            [],
+            [[1, 1, 0], [0, 1, 1], [0, 0, 0]], 
+            [[0, 2, 2], [2, 2, 0], [0, 0, 0]], 
+            [[3, 0, 0], [3, 3, 3], [0, 0, 0]], 
+            [[4, 4], [4, 4]],                  
+            [[0, 0, 5], [5, 5, 5], [0, 0, 0]], 
+            [[0, 6, 0], [6, 6, 6], [0, 0, 0]], 
+            [[0, 0, 0, 0], [7, 7, 7, 7], [0, 0, 0, 0], [0, 0, 0, 0]] 
+        ];
+
+        const SPEED_LEVELS = { 1: 800, 2: 600, 3: 400, 4: 250, 5: 120 };
+        const LEVEL_THRESHOLDS = { 1: 1000, 2: 3000, 3: 6000, 4: 10000, 5: 15000 };
+
+        let grid = [];
+        let score = 0;
+        let level = 1;
+        let gameOver = false;
+        let gameRunning = false;
+        
+        let timerInterval = null;
+        let gameInterval = null;
+        let totalSeconds = 0;
+        
+        let skillAvailable = true;
+        let bombAmmo = 20;
+        let bombActive = false;
+
+        let currentPiece = { matrix: null, x: 0, y: 0, colorIndex: 0 };
+
+        function initGrid() {
+            grid = [];
+            for (let r = 0; r < ROW; r++) {
+                grid[r] = new Array(COL).fill(0);
+            }
+        }
+
+        // 載入並更新排行榜
+        function updateLeaderboardUI() {
+            let records = JSON.parse(localStorage.getItem('tetris_player_records')) || [];
+            const listElement = document.getElementById('leaderboard');
+            listElement.innerHTML = '';
+            
+            for (let i = 0; i < 3; i++) {
+                let item = records[i];
+                let li = document.createElement('li');
+                li.className = 'leaderboard-item';
+                if (item) {
+                    li.innerHTML = `<span class="player-name">${i+1}. ${item.name}</span><span>${item.score}</span>`;
+                } else {
+                    li.innerHTML = `<span class="player-name">${i+1}. 空缺</span><span>0</span>`;
+                }
+                listElement.appendChild(li);
+            }
+        }
+
+        // 儲存新紀錄到排行榜
+        function saveScore(name, finalScore) {
+            if(finalScore <= 0) return;
+            let records = JSON.parse(localStorage.getItem('tetris_player_records')) || [];
+            
+            // 剔除空白名字
+            let finalName = name.trim() || "無名英雄";
+            
+            records.push({ name: finalName, score: finalScore });
+            records.sort((a, b) => b.score - a.score);
+            records = records.slice(0, 3); // 只留前三名
+            
+            localStorage.setItem('tetris_player_records', JSON.stringify(records));
+            updateLeaderboardUI();
+        }
+
+        function createPiece() {
+            if (bombActive) {
+                bombActive = false;
+                bombBtn.classList.remove('skill-active');
+            }
+
+            const id = Math.floor(Math.random() * 7) + 1;
+            const matrix = SHAPES[id];
+            currentPiece.matrix = JSON.parse(JSON.stringify(matrix));
+            currentPiece.colorIndex = id;
+            currentPiece.y = id === 7 ? -1 : 0; 
+            currentPiece.x = Math.floor((COL - matrix[0].length) / 2);
+
+            if (checkCollision(currentPiece.matrix, currentPiece.x, currentPiece.y)) {
+                endGame(false);
+            }
+        }
+
+        function drawBlock(x, y, colorIndex, isBomb = false) {
+            ctx.fillStyle = isBomb ? '#e67e22' : COLORS[colorIndex];
+            ctx.fillRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            ctx.strokeStyle = isBomb ? '#fff' : 'rgba(26, 37, 47, 0.5)';
+            ctx.strokeRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+            
+            if (isBomb) {
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(x * BLOCK_SIZE + BLOCK_SIZE/2, y * BLOCK_SIZE + BLOCK_SIZE/2, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function drawGhostBlock(x, y) {
+            ctx.strokeStyle = bombActive ? 'rgba(230, 126, 34, 0.6)' : 'rgba(255, 255, 255, 0.3)'; 
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([4, 2]); 
+            ctx.strokeRect(x * BLOCK_SIZE + 1, y * BLOCK_SIZE + 1, BLOCK_SIZE - 2, BLOCK_SIZE - 2);
+            ctx.setLineDash([]); 
+            ctx.lineWidth = 1;
+        }
+
+        function getGhostY() {
+            let ghostY = currentPiece.y;
+            while (!checkCollision(currentPiece.matrix, currentPiece.x, ghostY + 1)) {
+                ghostY++;
+            }
+            return ghostY;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let r = 0; r < ROW; r++) {
+                for (let c = 0; c < COL; c++) {
+                    if (grid[r][c] > 0) {
+                        drawBlock(c, r, grid[r][c]);
+                    }
+                }
+            }
+
+            if (!currentPiece.matrix || gameOver) return;
+
+            const ghostY = getGhostY();
+            if (ghostY > currentPiece.y) {
+                for (let r = 0; r < currentPiece.matrix.length; r++) {
+                    for (let c = 0; c < currentPiece.matrix[r].length; c++) {
+                        if (currentPiece.matrix[r][c] > 0) {
+                            if (ghostY + r >= 0) {
+                                drawGhostBlock(currentPiece.x + c, ghostY + r);
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (let r = 0; r < currentPiece.matrix.length; r++) {
+                for (let c = 0; c < currentPiece.matrix[r].length; c++) {
+                    if (currentPiece.matrix[r][c] > 0) {
+                        if (currentPiece.y + r >= 0) {
+                            drawBlock(currentPiece.x + c, currentPiece.y + r, currentPiece.colorIndex, bombActive);
+                        }
+                    }
+                }
+            }
+        }
+
+        function checkCollision(matrix, nextX, nextY) {
+            for (let r = 0; r < matrix.length; r++) {
+                for (let c = 0; c < matrix[r].length; c++) {
+                    if (matrix[r][c] > 0) {
+                        let targetX = nextX + c;
+                        let targetY = nextY + r;
+
+                        if (targetY < 0) {
+                            if (targetX < 0 || targetX >= COL) return true;
+                            continue;
+                        }
+                        if (targetX < 0 || targetX >= COL || targetY >= ROW) return true;
+                        if (grid[targetY][targetX] > 0) return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function lockPiece() {
+            if (bombActive) {
+                for (let r = 0; r < currentPiece.matrix.length; r++) {
+                    for (let c = 0; c < currentPiece.matrix[r].length; c++) {
+                        if (currentPiece.matrix[r][c] > 0) {
+                            let centerPieceY = currentPiece.y + r;
+                            let centerPieceX = currentPiece.x + c;
+
+                            for (let dr = -1; dr <= 1; dr++) {
+                                for (let dc = -1; dc <= 1; dc++) {
+                                    let targetY = centerPieceY + dr;
+                                    let targetX = centerPieceX + dc;
+                                    if (targetY >= 0 && targetY < ROW && targetX >= 0 && targetX < COL) {
+                                        grid[targetY][targetX] = 0; 
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                score += 50;
+                checkLevelUp();
+            } else {
+                for (let r = 0; r < currentPiece.matrix.length; r++) {
+                    for (let c = 0; c < currentPiece.matrix[r].length; c++) {
+                        if (currentPiece.matrix[r][c] > 0) {
+                            if (currentPiece.y + r >= 0) {
+                                grid[currentPiece.y + r][currentPiece.x + c] = currentPiece.colorIndex;
+                            }
+                        }
+                    }
+                }
+            }
+
+            clearLines();
+            createPiece();
+            draw();
+        }
+
+        function clearLines() {
+            let linesClearedThisTurn = 0;
+            for (let r = ROW - 1; r >= 0; r--) {
+                if (grid[r].every(val => val > 0)) {
+                    grid.splice(r, 1);
+                    grid.unshift(new Array(COL).fill(0));
+                    linesClearedThisTurn++;
+                    r++;
+                }
+            }
+            if (linesClearedThisTurn > 0) {
+                const scoreRewards = [0, 100, 300, 500, 800];
+                score += scoreRewards[linesClearedThisTurn] * level;
+                checkLevelUp();
+                updateUI();
+            }
+        }
+
+        function checkLevelUp() {
+            if (score >= LEVEL_THRESHOLDS[level]) {
+                if (level < 5) {
+                    level++;
+                    document.body.className = `lvl-${level}`;
+                    updateGameSpeed();
+                    showModal("恭喜晉級！", `你晉級到了第 ${level} 關！速度變快，背景也隨之進化了！`, true);
+                } else if (score >= LEVEL_THRESHOLDS[5]) {
+                    endGame(true);
+                }
+            }
+        }
+
+        function drop() {
+            if (gameOver) return;
+            if (!checkCollision(currentPiece.matrix, currentPiece.x, currentPiece.y + 1)) {
+                currentPiece.y++;
+            } else {
+                lockPiece();
+            }
+            draw();
+        }
+
+        function rotate() {
+            const matrix = currentPiece.matrix;
+            const n = matrix.length;
+            let rotated = Array.from({ length: n }, () => new Array(n).fill(0));
+            for (let r = 0; r < n; r++) {
+                for (let c = 0; c < n; c++) {
+                    rotated[c][n - 1 - r] = matrix[r][c];
+                }
+            }
+            if (!checkCollision(rotated, currentPiece.x, currentPiece.y)) {
+                currentPiece.matrix = rotated;
+            } else if (!checkCollision(rotated, currentPiece.x - 1, currentPiece.y)) {
+                currentPiece.x--;
+                currentPiece.matrix = rotated;
+            } else if (!checkCollision(rotated, currentPiece.x + 1, currentPiece.y)) {
+                currentPiece.x++;
+                currentPiece.matrix = rotated;
+            }
+            draw();
+        }
+
+        function useUltimateSkill() {
+            if (!gameRunning || gameOver || !skillAvailable) return;
+            initGrid();
+            skillAvailable = false;
+            score += 500; 
+            checkLevelUp();
+            updateUI();
+            draw();
+        }
+
+        function activateBombSkill() {
+            if (!gameRunning || gameOver || bombAmmo <= 0 || bombActive) return;
+            bombActive = true;
+            bombAmmo--;
+            bombBtn.classList.add('skill-active');
+            updateUI();
+            draw();
+        }
+
+        function updateGameSpeed() {
+            clearInterval(gameInterval);
+            gameInterval = setInterval(drop, SPEED_LEVELS[level]);
+        }
+
+        function updateUI() {
+            scoreElement.innerText = score;
+            levelElement.innerText = `${level} / 5`;
+            targetElement.innerText = LEVEL_THRESHOLDS[level];
+
+            if (skillAvailable) {
+                skillBtn.innerText = "一鍵全清 [Q] (剩1次)";
+                skillBtn.disabled = false;
+            } else {
+                skillBtn.innerText = "技能1: 已使用";
+                skillBtn.disabled = true;
+            }
+
+            bombBtn.innerText = `集群炸彈 [E] (剩${bombAmmo}次)`;
+            if (bombAmmo <= 0) bombBtn.disabled = true;
+        }
+
+        function startTimer() {
+            totalSeconds = 0;
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                totalSeconds++;
+                let mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+                let secs = (totalSeconds % 60).toString().padStart(2, '0');
+                timeElement.innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        document.addEventListener('keydown', event => {
+            const affectedKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'w', 'W', 's', 'S', 'a', 'A', 'd', 'D', 'q', 'Q', 'e', 'E'];
+            if (affectedKeys.includes(event.key)) event.preventDefault(); 
+
+            if (!gameRunning || gameOver) return;
+            const key = event.key.toLowerCase();
+
+            if (event.key === 'ArrowLeft' || key === 'a') {
+                if (!checkCollision(currentPiece.matrix, currentPiece.x - 1, currentPiece.y)) { currentPiece.x--; draw(); }
+            } else if (event.key === 'ArrowRight' || key === 'd') {
+                if (!checkCollision(currentPiece.matrix, currentPiece.x + 1, currentPiece.y)) { currentPiece.x++; draw(); }
+            } else if (event.key === 'ArrowDown' || key === 's') {
+                drop();
+            } else if (event.key === 'ArrowUp' || key === 'w') {
+                rotate();
+            } else if (key === 'q') {
+                useUltimateSkill();
+            } else if (key === 'e') {
+                activateBombSkill();
+            } else if (event.key === ' ') {
+                while (!checkCollision(currentPiece.matrix, currentPiece.x, currentPiece.y + 1)) { currentPiece.y++; }
+                lockPiece();
+            }
+        });
+
+        function startGame() {
+            initGrid();
+            score = 0;
+            level = 1;
+            gameOver = false;
+            gameRunning = true;
+            skillAvailable = true;
+            bombAmmo = 20;
+            bombActive = false;
+            document.body.className = "lvl-1";
+            bombBtn.classList.remove('skill-active');
+            
+            updateUI();
+            startTimer();
+            createPiece();
+            updateGameSpeed();
+            draw();
+
+            document.getElementById('start-btn').innerText = "重新開始";
+        }
+
+        function endGame(isWin) {
+            gameOver = true;
+            gameRunning = false;
+            clearInterval(gameInterval);
+            clearInterval(timerInterval);
+
+            // 隨機產生一個預設代號，防止玩家懶得打字
+            const randomID = Math.floor(1000 + Math.random() * 9000);
+            playerNameField.value = `玩家${randomID}`;
+
+            if (isWin) {
+                showModal("👑 恭喜完美通關！", `你成功征服了全部 5 個關卡！\n最終分數：${score}\n總共用時：${timeElement.innerText}`, false);
+            } else {
+                showModal("Game Over", `很遺憾，方塊觸頂了！\n最終關卡：第 ${level} 關\n最終分數：${score}`, false);
+            }
+        }
+
+        // isLevelUpNotice 用於區分是「單純升關通知」還是「遊戲真的結束需要結算名字」
+        let currentModalIsLevelUp = false;
+
+        function showModal(title, text, isLevelUpNotice = false) {
+            currentModalIsLevelUp = isLevelUpNotice;
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-desc').innerText = text;
+            
+            const inputArea = document.getElementById('name-input-area');
+            if (isLevelUpNotice) {
+                inputArea.style.display = 'none'; // 升級通知不需要輸入框
+            } else {
+                inputArea.style.display = 'block'; // 遊戲結束需要輸入框
+            }
+            
+            document.getElementById('game-modal').style.display = 'flex';
+        }
+
+        function handleModalSubmit() {
+            // 如果不是升關通知（代表是真正的遊戲結束），就抓取輸入框的名字並存檔
+            if (!currentModalIsLevelUp) {
+                const name = playerNameField.value;
+                saveScore(name, score);
+            }
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('game-modal').style.display = 'none';
+        }
+
+        updateLeaderboardUI();
+        initGrid();
+        draw();
+    </script>
+</body>
+</html>
