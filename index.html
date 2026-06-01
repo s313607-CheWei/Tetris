@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>俄羅斯方塊</title>
+    <title>俄羅斯方塊 - 徹夜之歌主題</title>
     <style>
         body {
             color: #fff;
@@ -15,12 +15,12 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px 0;
-            overflow-y: auto;
+            overflow: hidden;
             transition: background 1s ease;
             background-size: 40px 40px;
         }
 
-        /* 徹夜之歌迷幻深夜風背景（已全面調暗 50%，極致護眼） */
+        /* 徹夜之歌迷幻深夜風背景 */
         body.lvl-1 {
             background-color: #04060a;
             background-image: linear-gradient(to right, rgba(155, 89, 182, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(155, 89, 182, 0.03) 1px, transparent 1px);
@@ -45,7 +45,6 @@
         h1 {
             margin: 0 0 15px 0;
             font-size: 32px;
-            /* 調暗標題螢光 */
             text-shadow: 0 0 10px rgba(155, 89, 182, 0.4);
             letter-spacing: 4px;
         }
@@ -58,7 +57,7 @@
             max-width: 1200px;
         }
 
-        /* 徹夜之歌動漫角色區（調暗邊框螢光） */
+        /* 角色欄 */
         .anime-char {
             width: 180px;
             height: 500px;
@@ -83,7 +82,6 @@
             transition: all 0.5s ease;
             z-index: 2;
         }
-        /* 圖片沒載入時的文字發光特效（調暗） */
         .char-fallback-text {
             font-size: 24px;
             font-weight: bold;
@@ -105,10 +103,10 @@
             border-radius: 16px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.9);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(155, 89, 182, 0.1); /* 調暗外框 */
+            border: 1px solid rgba(155, 89, 182, 0.1);
         }
 
-        /* ✨【護眼大修正】高對比純白清晰邊框，且帶有顯眼微光，絕不費眼！ */
+        /* 護眼高對比白框 */
         #game-board {
             width: 220px;
             height: 500px;
@@ -137,7 +135,7 @@
         .info-box h3 {
             margin: 0 0 4px 0;
             font-size: 11px;
-            color: #8f88d4; /* 稍微調暗 */
+            color: #8f88d4;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -150,7 +148,6 @@
             text-shadow: 0 0 6px rgba(0, 206, 201, 0.3);
         }
 
-        /* 下一個方塊預覽畫布 */
         #next-box {
             display: block;
             margin: 5px auto 0 auto;
@@ -186,7 +183,7 @@
         }
         .leaderboard-item:last-child { border: none; }
 
-        /* 按鈕 */
+        /* 按鈕風格 */
         .btn {
             color: white;
             border: none;
@@ -232,37 +229,57 @@
             line-height: 1.4;
         }
 
-        /* 彈窗（最高層級，且確保裡面的按鈕可被正常點選） */
+        /* 彈窗基礎 */
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
+            background: rgba(2, 3, 7, 0.95);
             justify-content: center;
             align-items: center;
-            z-index: 9999; /* 確保在最上層 */
+            z-index: 9999;
         }
 
         .modal-content {
-            background: #22252a;
-            padding: 25px;
-            border-radius: 12px;
+            background: #161920;
+            padding: 30px;
+            border-radius: 16px;
             text-align: center;
-            max-width: 350px;
-            border: 2px solid #00cec9;
-            box-shadow: 0 0 20px rgba(0, 206, 201, 0.3);
+            max-width: 400px;
+            width: 85%;
+            border: 2px solid #9b59b6;
+            box-shadow: 0 0 30px rgba(155, 89, 182, 0.3);
         }
 
         .modal-input {
             width: 80%;
-            padding: 8px;
+            padding: 10px;
             margin: 15px 0 5px 0;
-            border: 2px solid #7f8c8d;
-            border-radius: 4px;
-            background: #15181c;
+            border: 2px solid #4b4b4b;
+            border-radius: 6px;
+            background: #090a0f;
             color: #fff;
             font-size: 14px;
             text-align: center;
+        }
+
+        /* ✨ 獨特的首頁教學排版風格 */
+        .tutorial-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            text-align: left;
+            margin: 20px 0;
+            font-size: 13px;
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .tutorial-title {
+            color: #00cec9;
+            font-weight: bold;
+            margin-bottom: 2px;
         }
     </style>
 </head>
@@ -329,6 +346,42 @@
         </div>
     </div>
 
+    <div id="welcome-modal" class="modal" style="display: flex;">
+        <div class="modal-content" style="border-color: #00cec9; box-shadow: 0 0 30px rgba(0, 206, 201, 0.2);">
+            <h2 style="color: #00cec9; margin-top: 0; letter-spacing: 2px;">🌙 徹夜之歌：夜行方塊</h2>
+            <p style="font-size: 14px; color: #b2bec3; line-height: 1.5; margin-bottom: 0;">歡迎來到深夜的世界。與七草薺和夜守更一起，在方塊完全重疊前消滅它們吧！</p>
+            
+            <div class="tutorial-grid">
+                <div>
+                    <div class="tutorial-title">⬅️ ➡️ 方向鍵 / A D</div>
+                    <div style="color: #bdc3c7;">左右移動方塊</div>
+                </div>
+                <div>
+                    <div class="tutorial-title">⬆️ 方向鍵 / W</div>
+                    <div style="color: #bdc3c7;">旋轉方塊方向</div>
+                </div>
+                <div>
+                    <div class="tutorial-title">⬇️ 方向鍵 / S</div>
+                    <div style="color: #bdc3c7;">加速方塊下落</div>
+                </div>
+                <div>
+                    <div class="tutorial-title">Spacebar 空白鍵</div>
+                    <div style="color: #bdc3c7;">瞬間直落地落鎖定</div>
+                </div>
+                <div>
+                    <div class="tutorial-title">[Q] 鍵 - 一鍵全清</div>
+                    <div style="color: #a29bfe;">危急時重設全場 (限1次)</div>
+                </div>
+                <div>
+                    <div class="tutorial-title">[E] 鍵 - 集群炸彈</div>
+                    <div style="color: #ffbe76;">下一顆方塊會炸毀九宮格</div>
+                </div>
+            </div>
+            
+            <button class="btn" style="background-color: #00cec9; color:#000; padding: 12px; font-size: 16px;" onclick="closeWelcomeAndStart()">開始吸血鬼夜行</button>
+        </div>
+    </div>
+
     <div id="game-modal" class="modal">
         <div class="modal-content">
             <h2 id="modal-title">遊戲結束</h2>
@@ -337,7 +390,11 @@
                 <label for="player-name-field" style="font-size: 13px; color: #b2bec3;">請輸入榮譽榜大名：</label><br>
                 <input type="text" id="player-name-field" class="modal-input" maxlength="10">
             </div>
-            <button class="btn" style="background-color: #00cec9; color:#000; cursor: pointer;" onclick="handleModalSubmit()">確定</button>
+            
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button id="modal-confirm-btn" class="btn" style="background-color: #00cec9; color:#000; margin:0;" onclick="handleModalSubmit()">確定</button>
+                <button id="modal-retry-btn" class="btn" style="background-color: #e74c3c; color:#fff; margin:0; display:none;" onclick="handleModalRetry()">再熬一夜 (重新遊玩)</button>
+            </div>
         </div>
     </div>
 
@@ -424,13 +481,27 @@
             }
         }
 
+        // ✨【重要修正】同名覆蓋機制，防止多筆重複霸榜
         function saveScore(name, finalScore) {
             if(finalScore <= 0) return;
             let records = JSON.parse(localStorage.getItem('tetris_player_records')) || [];
             let finalName = name.trim() || "無名英雄";
-            records.push({ name: finalName, score: finalScore });
+            
+            // 尋找排行榜中有沒有一模一樣的名字
+            let existingRecordIndex = records.findIndex(r => r.name === finalName);
+            
+            if (existingRecordIndex !== -1) {
+                // 如果存在同名，且這次拿更高分，才去覆蓋它
+                if (finalScore > records[existingRecordIndex].score) {
+                    records[existingRecordIndex].score = finalScore;
+                }
+            } else {
+                // 如果不存在，正常新增一筆資料
+                records.push({ name: finalName, score: finalScore });
+            }
+            
             records.sort((a, b) => b.score - a.score);
-            records = records.slice(0, 3);
+            records = records.slice(0, 3); // 只留前三名
             localStorage.setItem('tetris_player_records', JSON.stringify(records));
             updateLeaderboardUI();
         }
@@ -700,7 +771,6 @@
             }, 1000);
         }
 
-        // ✨【關鍵修正】鍵盤事件獨立防護，不干涉滑鼠對彈窗按鈕的點擊
         document.addEventListener('keydown', event => {
             const affectedKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'w', 'W', 's', 'S', 'a', 'A', 'd', 'D', 'q', 'Q', 'e', 'E'];
             if (affectedKeys.includes(event.key)) event.preventDefault(); 
@@ -725,6 +795,12 @@
                 lockPiece();
             }
         });
+
+        // ✨ 關閉首頁教學並自動開始遊戲
+        function closeWelcomeAndStart() {
+            document.getElementById('welcome-modal').style.display = 'none';
+            startGame();
+        }
 
         function startGame() {
             initGrid();
@@ -757,8 +833,14 @@
             clearInterval(gameInterval);
             clearInterval(timerInterval);
 
-            const randomID = Math.floor(1000 + Math.random() * 9000);
-            playerNameField.value = `夜行者${randomID}`;
+            // 如果排行榜內已有上一次輸入的名字，預設填入該名字，否則才隨機
+            let records = JSON.parse(localStorage.getItem('tetris_player_records')) || [];
+            if(records.length > 0) {
+                playerNameField.value = records[0].name;
+            } else {
+                const randomID = Math.floor(1000 + Math.random() * 9000);
+                playerNameField.value = `夜行者${randomID}`;
+            }
 
             if (isWin) {
                 showModal("👑 徹夜通關", `你成功征服了全部 5 個深夜階段！\n最終得分：${score}\n作戰時間：${timeElement.innerText}`, false);
@@ -772,8 +854,18 @@
             currentModalIsLevelUp = isLevelUpNotice;
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-desc').innerText = text;
+            
             const inputArea = document.getElementById('name-input-area');
-            inputArea.style.display = isLevelUpNotice ? 'none' : 'block';
+            const retryBtn = document.getElementById('modal-retry-btn');
+            
+            if (isLevelUpNotice) {
+                inputArea.style.display = 'none';
+                retryBtn.style.display = 'none'; // 升級時不顯示重新遊玩
+            } else {
+                inputArea.style.display = 'block';
+                retryBtn.style.display = 'block'; // 遊戲結束時顯示重新遊玩
+            }
+            
             document.getElementById('game-modal').style.display = 'flex';
         }
 
@@ -783,6 +875,14 @@
                 saveScore(name, score);
             }
             closeModal();
+        }
+
+        // ✨【新增】彈窗內直接重新遊玩
+        function handleModalRetry() {
+            const name = playerNameField.value;
+            saveScore(name, score); // 自動幫玩家儲存當前分數
+            closeModal();
+            startGame(); // 重新啟動
         }
 
         function closeModal() {
