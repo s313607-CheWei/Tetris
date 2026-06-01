@@ -104,7 +104,7 @@
             z-index: 2;
         }
 
-        /* ✨ 徹底修復：讓箭頭小尖角邊框的外觀顏色完全同步角色，絕不殘留粉色 */
+        /* 讓箭頭小尖角邊框的外觀顏色完全同步角色，不殘留粉色 */
         .speech-bubble.bubble-nazuna::before {
             border-color: #bf55ec transparent;
             bottom: -13px; left: 29px; border-width: 11px 11px 0; z-index: 1;
@@ -298,9 +298,9 @@
                 <img src="https://storage.moegirl.tw/moegirl/commons/2/20/Yofukashi_nazuna_face_2.png" alt="七草薺">
             </div>
 
-            <div class="char-card active-nazuna" id="card-kou" onclick="switchCharacter('kou')">
-                <div class="char-name-tag">KOU / 夜守更</div>
-                <img src="https://storage.moegirl.org.cn/moegirl/commons/f/f4/Yofukashi_kou_face_2.png" alt="夜守更">
+             <div class="char-card" id="card-kou" onclick="switchCharacter('kou')">
+                 <div class="char-name-tag">KOU / 夜守更</div>
+                 <img src="https://storage.moegirl.org.cn/moegirl/commons/f/f4/Yofukashi_kou_face_2.png" alt="夜守更">
             </div>
             
         </div>
@@ -449,7 +449,7 @@
                 idle: ["今晚，我們一起「徹夜之歌」吧！", "怎麼啦？不點開始，是在眷戀白天的世界嗎？", "熬夜，可是人類在對白天進行叛逆啊。"],
                 clear: ["哼，這手速勉強能拿個及格分吧！", "不錯嘛！方塊被消掉的聲音真讓人興奮。", "再來再來！黑夜才剛剛開始呢！"],
                 levelup: ["哎呀，四周的顏色變了...你心跳是不是加速了？", "等級提升了！打起精神來，別死掉喔。"],
-                gameover: ["哎呀～太陽升起來了呢，今天就到此為止吧。", "輸掉了嗎？真開心，不過今晚很好玩喔。"]
+                gameover: ["哎呀～太陽升起來了呢，今天就到此為止吧。", "輸掉了嗎功能？真可惜，不過今晚很好玩喔。"]
             },
             kou: {
                 idle: ["我...想變得更了解夜晚！", "只要跟著你，我是不是也能學會享受熬夜？", "點擊開始遊戲吧，我想看看夜晚的極限。"],
@@ -727,11 +727,8 @@
                     level++;
                     document.body.className = `lvl-${level}`;
                     
-                    const kouImg = document.querySelector('#card-kou img');
                     const kouTag = document.querySelector('#card-kou .char-name-tag');
                     if (level >= 4) {
-                        // 穩定的半吸血鬼阿更網址
-                        kouImg.src = 'https://raw.githubusercontent.com/the-maldonado-firm/yofukashi-no-uta/main/kou_vampire.png'; 
                         kouTag.innerText = "KOU / 夜守更(半吸血鬼)";
                     }
                     
@@ -867,7 +864,7 @@
             bombActive = false;
             document.body.className = "lvl-1";
             
-            document.querySelector('#card-kou img').src = 'https://raw.githubusercontent.com/the-maldonado-firm/yofukashi-no-uta/main/kou_normal.png';
+            // ✨ 完美刪除：拔掉了會去偷換、覆寫男主角大頭貼網址的壞程式碼！
             document.querySelector('#card-kou .char-name-tag').innerText = "KOU / 夜守更";
             bombBtn.classList.remove('skill-active');
             
