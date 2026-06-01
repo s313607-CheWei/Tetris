@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>俄羅斯方塊：名留青史版</title>
+    <title>俄羅斯方塊</title>
     <style>
         body {
             color: #fff;
@@ -16,100 +16,134 @@
             margin: 0;
             padding: 20px 0;
             overflow-y: auto;
-            transition: background 1s ease, box-shadow 1s ease;
+            transition: background 1s ease;
             background-size: 40px 40px;
         }
 
-        /* 5 個關卡的專屬科幻背景外觀 */
+        /* 5 個關卡的動態霓虹科幻背景（無文字說明） */
         body.lvl-1 {
-            background-color: #111a24;
-            background-image: linear-gradient(to right, rgba(52, 152, 219, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(52, 152, 219, 0.05) 1px, transparent 1px);
+            background-color: #0b111e;
+            background-image: linear-gradient(to right, rgba(52, 152, 219, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(52, 152, 219, 0.08) 1px, transparent 1px);
         }
         body.lvl-2 {
-            background-color: #141f19;
-            background-image: linear-gradient(to right, rgba(46, 204, 113, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(46, 204, 113, 0.05) 1px, transparent 1px);
+            background-color: #0d1a13;
+            background-image: linear-gradient(to right, rgba(46, 204, 113, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(46, 204, 113, 0.08) 1px, transparent 1px);
         }
         body.lvl-3 {
-            background-color: #1f1b14;
-            background-image: linear-gradient(to right, rgba(241, 196, 15, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(241, 196, 15, 0.05) 1px, transparent 1px);
+            background-color: #1a160d;
+            background-image: linear-gradient(to right, rgba(241, 196, 15, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(241, 196, 15, 0.08) 1px, transparent 1px);
         }
         body.lvl-4 {
-            background-color: #221625;
-            background-image: linear-gradient(to right, rgba(155, 89, 182, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(155, 89, 182, 0.05) 1px, transparent 1px);
+            background-color: #1b0f1c;
+            background-image: linear-gradient(to right, rgba(155, 89, 182, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(155, 89, 182, 0.08) 1px, transparent 1px);
         }
         body.lvl-5 {
-            background-color: #241212;
-            background-image: linear-gradient(to right, rgba(231, 76, 60, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(231, 76, 60, 0.08) 1px, transparent 1px);
+            background-color: #1f0a0a;
+            background-image: linear-gradient(to right, rgba(231, 76, 60, 0.12) 1px, transparent 1px), linear-gradient(to bottom, rgba(231, 76, 60, 0.12) 1px, transparent 1px);
         }
 
         h1 {
             margin: 0 0 15px 0;
-            font-size: 28px;
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
-            letter-spacing: 2px;
+            font-size: 32px;
+            text-shadow: 0 0 15px rgba(255,255,255,0.4);
+            letter-spacing: 4px;
         }
 
+        /* 總舞台：容納左角色、遊戲主區、右角色 */
+        .stage-wrapper {
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            max-width: 1200px;
+        }
+
+        /* 動漫角色定位欄 */
+        .anime-char {
+            width: 180px;
+            height: 450px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            user-select: none;
+            pointer-events: none;
+        }
+        .anime-char img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.7));
+            transition: all 0.5s ease;
+        }
+
+        /* 遊戲中央主容器 */
         .game-container {
             display: flex;
             gap: 20px;
-            background: rgba(44, 62, 80, 0.85);
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-            backdrop-filter: blur(10px);
+            background: rgba(20, 30, 48, 0.85);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            backdrop-filter: blur(12px);
             border: 1px solid rgba(255,255,255,0.1);
         }
 
+        /* 嚴格的經典 1:2 遊戲畫布比例 (寬250高500，方塊25x25完美正方形) */
         #game-board {
+            width: 250px;
+            height: 500px;
             border: 3px solid #ecf0f1;
-            background-color: rgba(26, 37, 47, 0.95);
-            border-radius: 6px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            background-color: rgba(10, 15, 25, 0.95);
+            border-radius: 8px;
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.9);
         }
 
+        /* 側邊資訊面板 */
         .side-panel {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            width: 210px;
+            width: 220px;
         }
 
         .info-box {
-            background: rgba(26, 37, 47, 0.8);
-            padding: 8px 12px;
-            border-radius: 6px;
-            margin-bottom: 6px;
-            border: 1px solid rgba(127, 140, 141, 0.5);
+            background: rgba(10, 15, 25, 0.8);
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(127, 140, 141, 0.4);
         }
 
         .info-box h3 {
-            margin: 0 0 3px 0;
+            margin: 0 0 4px 0;
             font-size: 11px;
             color: #bdc3c7;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .info-box p {
             margin: 0;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             color: #2ecc71;
-            text-shadow: 0 0 5px rgba(46, 204, 113, 0.3);
+            text-shadow: 0 0 8px rgba(46, 204, 113, 0.4);
         }
 
         /* 排行榜 */
         .leaderboard-box {
-            background: rgba(26, 37, 47, 0.9);
+            background: rgba(10, 15, 25, 0.85);
             border: 1px solid #f1c40f;
-            border-radius: 6px;
-            padding: 8px 12px;
+            border-radius: 8px;
+            padding: 10px 14px;
             margin-bottom: 8px;
+            box-shadow: 0 0 10px rgba(241, 196, 15, 0.1);
         }
         .leaderboard-box h3 {
-            margin: 0 0 5px 0;
+            margin: 0 0 6px 0;
             font-size: 12px;
             color: #f1c40f;
             text-align: center;
+            letter-spacing: 1px;
         }
         .leaderboard-list {
             margin: 0;
@@ -120,7 +154,7 @@
         .leaderboard-item {
             display: flex;
             justify-content: space-between;
-            padding: 3px 0;
+            padding: 4px 0;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
         .leaderboard-item:last-child { border: none; }
@@ -131,14 +165,14 @@
             white-space: nowrap;
         }
 
-        /* 按鈕控制 */
+        /* 控制按鈕 */
         .btn {
             color: white;
             border: none;
-            padding: 9px;
-            font-size: 13px;
+            padding: 10px;
+            font-size: 14px;
             font-weight: bold;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s;
             width: 100%;
@@ -171,13 +205,13 @@
         }
 
         .instructions {
-            margin-top: 8px;
+            margin-top: 10px;
             font-size: 11px;
             color: #bdc3c7;
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
-        /* 彈出視窗（增加輸入框樣式） */
+        /* 彈出視窗 */
         .modal {
             display: none;
             position: fixed;
@@ -189,13 +223,13 @@
         }
 
         .modal-content {
-            background: #34495e;
+            background: #2c3e50;
             padding: 25px;
-            border-radius: 10px;
+            border-radius: 12px;
             text-align: center;
             max-width: 350px;
             border: 2px solid #2ecc71;
-            box-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+            box-shadow: 0 0 25px rgba(46, 204, 113, 0.5);
         }
 
         .modal-input {
@@ -204,7 +238,7 @@
             margin: 15px 0 5px 0;
             border: 2px solid #bdc3c7;
             border-radius: 4px;
-            background: #2c3e50;
+            background: #1a252f;
             color: #fff;
             font-size: 14px;
             text-align: center;
@@ -217,53 +251,63 @@
 </head>
 <body class="lvl-1">
 
-    <h1>俄羅斯方塊：五關背景大挑戰</h1>
+    <h1>俄羅斯方塊</h1>
 
-    <div class="game-container">
-        <canvas id="game-board" width="220" height="440"></canvas>
+    <div class="stage-wrapper">
+        <div class="anime-char">
+            <img id="char-left" src="char_left.png" alt="Character Left" onerror="this.style.opacity=0.2;">
+        </div>
 
-        <div class="side-panel">
-            <div>
-                <div class="leaderboard-box">
-                    <h3>🏆 歷史排行榜 (TOP 3)</h3>
-                    <ul class="leaderboard-list" id="leaderboard">
-                        <li class="leaderboard-item"><span class="player-name">1. 空缺</span><span>0</span></li>
-                        <li class="leaderboard-item"><span class="player-name">2. 空缺</span><span>0</span></li>
-                        <li class="leaderboard-item"><span class="player-name">3. 空缺</span><span>0</span></li>
-                    </ul>
+        <div class="game-container">
+            <canvas id="game-board" width="250" height="500"></canvas>
+
+            <div class="side-panel">
+                <div>
+                    <div class="leaderboard-box">
+                        <h3>🏆 歷史排行榜 (TOP 3)</h3>
+                        <ul class="leaderboard-list" id="leaderboard">
+                            <li class="leaderboard-item"><span class="player-name">1. 空缺</span><span>0</span></li>
+                            <li class="leaderboard-item"><span class="player-name">2. 空缺</span><span>0</span></li>
+                            <li class="leaderboard-item"><span class="player-name">3. 空缺</span><span>0</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box">
+                        <h3>SCORE / 當前分數</h3>
+                        <p id="score">0</p>
+                    </div>
+                    <div class="info-box">
+                        <h3>TARGET / 晉級目標</h3>
+                        <p id="target-score">1000</p>
+                    </div>
+                    <div class="info-box">
+                        <h3>LEVEL / 關卡</h3>
+                        <p id="level">1 / 5</p>
+                    </div>
+                    <div class="info-box">
+                        <h3>TIME / 時間</h3>
+                        <p id="time">00:00</p>
+                    </div>
                 </div>
 
-                <div class="info-box">
-                    <h3>SCORE / 當前分數</h3>
-                    <p id="score">0</p>
+                <div>
+                    <button id="skill-btn" class="btn" onclick="useUltimateSkill()">一鍵全清 [Q] (剩1次)</button>
+                    <button id="bomb-btn" class="btn" onclick="activateBombSkill()">集群炸彈 [E] (剩20次)</button>
+                    <button id="start-btn" class="btn" onclick="startGame()">開始遊戲</button>
                 </div>
-                <div class="info-box">
-                    <h3>TARGET / 晉級目標</h3>
-                    <p id="target-score">1000</p>
-                </div>
-                <div class="info-box">
-                    <h3>LEVEL / 關卡</h3>
-                    <p id="level">1 / 5</p>
-                </div>
-                <div class="info-box">
-                    <h3>TIME / 時間</h3>
-                    <p id="time">00:00</p>
+
+                <div class="instructions">
+                    <strong>操作說明：</strong><br>
+                    • 移動：← ➡️ 或 A / D<br>
+                    • 旋轉：⬆️ 或 W | 加速：⬇️ 或 S<br>
+                    • 瞬落：空白鍵 (Space)<br>
+                    • <b>[Q]</b> 全清 | <b>[E]</b> 炸彈方塊<br>
                 </div>
             </div>
+        </div>
 
-            <div>
-                <button id="skill-btn" class="btn" onclick="useUltimateSkill()">一鍵全清 [Q] (剩1次)</button>
-                <button id="bomb-btn" class="btn" onclick="activateBombSkill()">集群炸彈 [E] (剩20次)</button>
-                <button id="start-btn" class="btn" onclick="startGame()">開始遊戲</button>
-            </div>
-
-            <div class="instructions">
-                <strong>操作說明：</strong><br>
-                • 移動：← ➡️ 或 A / D<br>
-                • 旋轉：⬆️ 或 W | 加速：⬇️ 或 S<br>
-                • 瞬落：空白鍵 (Space)<br>
-                • <b>[Q]</b> 全清 | <b>[E]</b> 炸彈方塊<br>
-            </div>
+        <div class="anime-char">
+            <img id="char-right" src="char_r1.png" alt="Character Right" onerror="this.style.opacity=0.2;">
         </div>
     </div>
 
@@ -275,7 +319,7 @@
                 <label for="player-name-field" style="font-size: 13px; color: #bdc3c7;">請輸入榮譽榜大名：</label><br>
                 <input type="text" id="player-name-field" class="modal-input" maxlength="10">
             </div>
-            <button class="btn" style="background-color: #2ecc71; box-shadow: 0 3px 0 #27ae60;" onclick="handleModalSubmit()">確定並送出</button>
+            <button class="btn" style="background-color: #2ecc71; box-shadow: 0 3px 0 #27ae60;" onclick="handleModalSubmit()">確定</button>
         </div>
     </div>
 
@@ -289,10 +333,23 @@
         const skillBtn = document.getElementById('skill-btn');
         const bombBtn = document.getElementById('bomb-btn');
         const playerNameField = document.getElementById('player-name-field');
+        const charRightImg = document.getElementById('char-right');
+
+        // 音訊物件宣告
+        const sndMove = new Audio('move.wav');
+        const sndDrop = new Audio('drop.wav');
+        const sndClear = new Audio('clear.wav');
+        const bgmNormal = new Audio('bgm_normal.mp3');
+        const bgmBoss = new Audio('bgm_boss.mp3');
+
+        // 設定背景音樂循環播放
+        bgmNormal.loop = true;
+        bgmBoss.loop = true;
 
         const ROW = 20;
         const COL = 10;
-        const BLOCK_SIZE = 22;
+        // 畫布寬250 / 10格 = 每格精確 25px 正方形。畫布高500 / 20格 = 25px，完美經典比例不拉長！
+        const BLOCK_SIZE = 25; 
 
         const COLORS = [
             null,
@@ -336,7 +393,28 @@
             }
         }
 
-        // 載入並更新排行榜
+        // 音效播放輔助函數（重設時間點，防連續點擊無聲）
+        function playSound(audioObj) {
+            audioObj.currentTime = 0;
+            audioObj.play().catch(e => console.log("音效播放被瀏覽器攔截"));
+        }
+
+        // 音樂切換控制
+        function manageBGM() {
+            if (!gameRunning || gameOver) {
+                bgmNormal.pause();
+                bgmBoss.pause();
+                return;
+            }
+            if (level >= 4) {
+                bgmNormal.pause();
+                bgmBoss.play().catch(e => console.log("BGM播放受限"));
+            } else {
+                bgmBoss.pause();
+                bgmNormal.play().catch(e => console.log("BGM播放受限"));
+            }
+        }
+
         function updateLeaderboardUI() {
             let records = JSON.parse(localStorage.getItem('tetris_player_records')) || [];
             const listElement = document.getElementById('leaderboard');
@@ -355,17 +433,14 @@
             }
         }
 
-        // 儲存新紀錄到排行榜
         function saveScore(name, finalScore) {
             if(finalScore <= 0) return;
             let records = JSON.parse(localStorage.getItem('tetris_player_records')) || [];
-            
-            // 剔除空白名字
             let finalName = name.trim() || "無名英雄";
             
             records.push({ name: finalName, score: finalScore });
             records.sort((a, b) => b.score - a.score);
-            records = records.slice(0, 3); // 只留前三名
+            records = records.slice(0, 3);
             
             localStorage.setItem('tetris_player_records', JSON.stringify(records));
             updateLeaderboardUI();
@@ -392,7 +467,7 @@
         function drawBlock(x, y, colorIndex, isBomb = false) {
             ctx.fillStyle = isBomb ? '#e67e22' : COLORS[colorIndex];
             ctx.fillRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-            ctx.strokeStyle = isBomb ? '#fff' : 'rgba(26, 37, 47, 0.5)';
+            ctx.strokeStyle = isBomb ? '#fff' : 'rgba(10, 15, 25, 0.5)';
             ctx.strokeRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
             
             if (isBomb) {
@@ -404,9 +479,9 @@
         }
 
         function drawGhostBlock(x, y) {
-            ctx.strokeStyle = bombActive ? 'rgba(230, 126, 34, 0.6)' : 'rgba(255, 255, 255, 0.3)'; 
+            ctx.strokeStyle = bombActive ? 'rgba(230, 126, 34, 0.6)' : 'rgba(255, 255, 255, 0.25)'; 
             ctx.lineWidth = 1.5;
-            ctx.setLineDash([4, 2]); 
+            ctx.setLineDash([4, 3]); 
             ctx.strokeRect(x * BLOCK_SIZE + 1, y * BLOCK_SIZE + 1, BLOCK_SIZE - 2, BLOCK_SIZE - 2);
             ctx.setLineDash([]); 
             ctx.lineWidth = 1;
@@ -422,6 +497,10 @@
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 繪製格線背景感
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.02)";
+            for(let i=0; i<COL; i++) ctx.strokeRect(i*BLOCK_SIZE, 0, BLOCK_SIZE, canvas.height);
 
             for (let r = 0; r < ROW; r++) {
                 for (let c = 0; c < COL; c++) {
@@ -477,6 +556,8 @@
         }
 
         function lockPiece() {
+            playSound(sndDrop); // 播放落地音效
+
             if (bombActive) {
                 for (let r = 0; r < currentPiece.matrix.length; r++) {
                     for (let c = 0; c < currentPiece.matrix[r].length; c++) {
@@ -496,6 +577,7 @@
                         }
                     }
                 }
+                playSound(sndClear);
                 score += 50;
                 checkLevelUp();
             } else {
@@ -526,6 +608,7 @@
                 }
             }
             if (linesClearedThisTurn > 0) {
+                playSound(sndClear); // 播放消除整行音效
                 const scoreRewards = [0, 100, 300, 500, 800];
                 score += scoreRewards[linesClearedThisTurn] * level;
                 checkLevelUp();
@@ -538,8 +621,15 @@
                 if (level < 5) {
                     level++;
                     document.body.className = `lvl-${level}`;
+                    
+                    // 隨關卡更換右側動漫人物造型 (1~3關與4~5關不同型態)
+                    if (level >= 4) {
+                        charRightImg.src = 'char_r2.png';
+                    }
+                    
+                    manageBGM(); // 切換對應的超燃 BGM
                     updateGameSpeed();
-                    showModal("恭喜晉級！", `你晉級到了第 ${level} 關！速度變快，背景也隨之進化了！`, true);
+                    showModal("LEVEL UP / 突破上限！", `成功晉級至第 ${level} 關！核心速度再次提升！`, true);
                 } else if (score >= LEVEL_THRESHOLDS[5]) {
                     endGame(true);
                 }
@@ -567,12 +657,15 @@
             }
             if (!checkCollision(rotated, currentPiece.x, currentPiece.y)) {
                 currentPiece.matrix = rotated;
+                playSound(sndMove);
             } else if (!checkCollision(rotated, currentPiece.x - 1, currentPiece.y)) {
                 currentPiece.x--;
                 currentPiece.matrix = rotated;
+                playSound(sndMove);
             } else if (!checkCollision(rotated, currentPiece.x + 1, currentPiece.y)) {
                 currentPiece.x++;
                 currentPiece.matrix = rotated;
+                playSound(sndMove);
             }
             draw();
         }
@@ -580,6 +673,7 @@
         function useUltimateSkill() {
             if (!gameRunning || gameOver || !skillAvailable) return;
             initGrid();
+            playSound(sndClear);
             skillAvailable = false;
             score += 500; 
             checkLevelUp();
@@ -592,6 +686,7 @@
             bombActive = true;
             bombAmmo--;
             bombBtn.classList.add('skill-active');
+            playSound(sndMove);
             updateUI();
             draw();
         }
@@ -637,9 +732,17 @@
             const key = event.key.toLowerCase();
 
             if (event.key === 'ArrowLeft' || key === 'a') {
-                if (!checkCollision(currentPiece.matrix, currentPiece.x - 1, currentPiece.y)) { currentPiece.x--; draw(); }
+                if (!checkCollision(currentPiece.matrix, currentPiece.x - 1, currentPiece.y)) { 
+                    currentPiece.x--; 
+                    playSound(sndMove);
+                    draw(); 
+                }
             } else if (event.key === 'ArrowRight' || key === 'd') {
-                if (!checkCollision(currentPiece.matrix, currentPiece.x + 1, currentPiece.y)) { currentPiece.x++; draw(); }
+                if (!checkCollision(currentPiece.matrix, currentPiece.x + 1, currentPiece.y)) { 
+                    currentPiece.x++; 
+                    playSound(sndMove);
+                    draw(); 
+                }
             } else if (event.key === 'ArrowDown' || key === 's') {
                 drop();
             } else if (event.key === 'ArrowUp' || key === 'w') {
@@ -664,6 +767,7 @@
             bombAmmo = 20;
             bombActive = false;
             document.body.className = "lvl-1";
+            charRightImg.src = 'char_r1.png';
             bombBtn.classList.remove('skill-active');
             
             updateUI();
@@ -671,6 +775,8 @@
             createPiece();
             updateGameSpeed();
             draw();
+
+            manageBGM(); // 啟動背景戰鬥音樂
 
             document.getElementById('start-btn').innerText = "重新開始";
         }
@@ -680,19 +786,18 @@
             gameRunning = false;
             clearInterval(gameInterval);
             clearInterval(timerInterval);
+            manageBGM(); // 停止音樂
 
-            // 隨機產生一個預設代號，防止玩家懶得打字
             const randomID = Math.floor(1000 + Math.random() * 9000);
             playerNameField.value = `玩家${randomID}`;
 
             if (isWin) {
-                showModal("👑 恭喜完美通關！", `你成功征服了全部 5 個關卡！\n最終分數：${score}\n總共用時：${timeElement.innerText}`, false);
+                showModal("👑 MISSION COMPLETE", `完美征服所有終極關卡！\n最終積分：${score}\n作戰時間：${timeElement.innerText}`, false);
             } else {
-                showModal("Game Over", `很遺憾，方塊觸頂了！\n最終關卡：第 ${level} 關\n最終分數：${score}`, false);
+                showModal("GAME OVER", `很遺憾，防塊已達上限頂點！\n作戰終點：第 ${level} 關\n最終積分：${score}`, false);
             }
         }
 
-        // isLevelUpNotice 用於區分是「單純升關通知」還是「遊戲真的結束需要結算名字」
         let currentModalIsLevelUp = false;
 
         function showModal(title, text, isLevelUpNotice = false) {
@@ -702,16 +807,15 @@
             
             const inputArea = document.getElementById('name-input-area');
             if (isLevelUpNotice) {
-                inputArea.style.display = 'none'; // 升級通知不需要輸入框
+                inputArea.style.display = 'none';
             } else {
-                inputArea.style.display = 'block'; // 遊戲結束需要輸入框
+                inputArea.style.display = 'block';
             }
             
             document.getElementById('game-modal').style.display = 'flex';
         }
 
         function handleModalSubmit() {
-            // 如果不是升關通知（代表是真正的遊戲結束），就抓取輸入框的名字並存檔
             if (!currentModalIsLevelUp) {
                 const name = playerNameField.value;
                 saveScore(name, score);
