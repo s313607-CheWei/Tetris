@@ -20,32 +20,33 @@
             background-size: 40px 40px;
         }
 
-        /* 徹夜之歌迷幻深夜風背景 */
+        /* 徹夜之歌迷幻深夜風背景（已全面調暗 50%，極致護眼） */
         body.lvl-1 {
-            background-color: #070b12;
-            background-image: linear-gradient(to right, rgba(155, 89, 182, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(155, 89, 182, 0.08) 1px, transparent 1px);
+            background-color: #04060a;
+            background-image: linear-gradient(to right, rgba(155, 89, 182, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(155, 89, 182, 0.03) 1px, transparent 1px);
         }
         body.lvl-2 {
-            background-color: #0d0b18;
-            background-image: linear-gradient(to right, rgba(52, 152, 219, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(52, 152, 219, 0.08) 1px, transparent 1px);
+            background-color: #06050a;
+            background-image: linear-gradient(to right, rgba(52, 152, 219, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(52, 152, 219, 0.03) 1px, transparent 1px);
         }
         body.lvl-3 {
-            background-color: #140b1c;
-            background-image: linear-gradient(to right, rgba(142, 68, 173, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(142, 68, 173, 0.08) 1px, transparent 1px);
+            background-color: #0a050e;
+            background-image: linear-gradient(to right, rgba(142, 68, 173, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(142, 68, 173, 0.03) 1px, transparent 1px);
         }
         body.lvl-4 {
-            background-color: #190924;
-            background-image: linear-gradient(to right, rgba(231, 76, 60, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(231, 76, 60, 0.08) 1px, transparent 1px);
+            background-color: #0c0412;
+            background-image: linear-gradient(to right, rgba(231, 76, 60, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(231, 76, 60, 0.03) 1px, transparent 1px);
         }
         body.lvl-5 {
-            background-color: #220526;
-            background-image: linear-gradient(to right, rgba(241, 196, 15, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(241, 196, 15, 0.1) 1px, transparent 1px);
+            background-color: #100212;
+            background-image: linear-gradient(to right, rgba(241, 196, 15, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(241, 196, 15, 0.04) 1px, transparent 1px);
         }
 
         h1 {
             margin: 0 0 15px 0;
             font-size: 32px;
-            text-shadow: 0 0 15px rgba(155, 89, 182, 0.6);
+            /* 調暗標題螢光 */
+            text-shadow: 0 0 10px rgba(155, 89, 182, 0.4);
             letter-spacing: 4px;
         }
 
@@ -57,7 +58,7 @@
             max-width: 1200px;
         }
 
-        /* 徹夜之歌動漫角色區（沒圖時會觸發帥氣的霓虹特效） */
+        /* 徹夜之歌動漫角色區（調暗邊框螢光） */
         .anime-char {
             width: 180px;
             height: 500px;
@@ -67,8 +68,8 @@
             user-select: none;
             pointer-events: none;
             border-radius: 12px;
-            background: rgba(155, 89, 182, 0.03);
-            border: 1px dashed rgba(155, 89, 182, 0.2);
+            background: rgba(155, 89, 182, 0.01);
+            border: 1px dashed rgba(155, 89, 182, 0.1);
             position: relative;
             overflow: hidden;
         }
@@ -78,20 +79,20 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            filter: drop-shadow(0 5px 20px rgba(155, 89, 182, 0.5));
+            filter: drop-shadow(0 5px 15px rgba(155, 89, 182, 0.3));
             transition: all 0.5s ease;
             z-index: 2;
         }
-        /* 圖片沒載入時的文字發光特效 */
+        /* 圖片沒載入時的文字發光特效（調暗） */
         .char-fallback-text {
             font-size: 24px;
             font-weight: bold;
             writing-mode: vertical-rl;
             text-orientation: upright;
             letter-spacing: 6px;
-            color: #fff;
-            text-shadow: 0 0 10px rgba(155, 89, 182, 0.8), 0 0 20px rgba(155, 89, 182, 0.5);
-            opacity: 0.8;
+            color: rgba(255, 255, 255, 0.7);
+            text-shadow: 0 0 8px rgba(155, 89, 182, 0.5);
+            opacity: 0.6;
             z-index: 1;
         }
 
@@ -99,22 +100,22 @@
         .game-container {
             display: flex;
             gap: 20px;
-            background: rgba(16, 18, 30, 0.85);
+            background: rgba(12, 14, 24, 0.9);
             padding: 20px;
             border-radius: 16px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(155, 89, 182, 0.2);
+            border: 1px solid rgba(155, 89, 182, 0.1); /* 調暗外框 */
         }
 
-        /* 調整後的畫布寬高比（220 x 500），讓方塊比例恢復經典微修長感 */
+        /* ✨【護眼大修正】高對比純白清晰邊框，且帶有顯眼微光，絕不費眼！ */
         #game-board {
             width: 220px;
             height: 500px;
-            border: 3px solid #9b59b6;
-            background-color: rgba(10, 11, 18, 0.95);
+            border: 3.5px solid #ffffff; 
+            background-color: rgba(6, 7, 12, 0.98);
             border-radius: 8px;
-            box-shadow: inset 0 0 25px rgba(0,0,0,0.9);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.95), 0 0 12px rgba(255, 255, 255, 0.2);
         }
 
         /* 側邊資訊面板 */
@@ -126,17 +127,17 @@
         }
 
         .info-box {
-            background: rgba(10, 11, 18, 0.8);
+            background: rgba(6, 7, 12, 0.85);
             padding: 8px 12px;
             border-radius: 8px;
             margin-bottom: 6px;
-            border: 1px solid rgba(155, 89, 182, 0.3);
+            border: 1px solid rgba(155, 89, 182, 0.15);
         }
 
         .info-box h3 {
             margin: 0 0 4px 0;
             font-size: 11px;
-            color: #a29bfe;
+            color: #8f88d4; /* 稍微調暗 */
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -146,21 +147,21 @@
             font-size: 18px;
             font-weight: bold;
             color: #00cec9;
-            text-shadow: 0 0 8px rgba(0, 206, 201, 0.4);
+            text-shadow: 0 0 6px rgba(0, 206, 201, 0.3);
         }
 
         /* 下一個方塊預覽畫布 */
         #next-box {
             display: block;
             margin: 5px auto 0 auto;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
             border-radius: 4px;
         }
 
         /* 排行榜 */
         .leaderboard-box {
-            background: rgba(10, 11, 18, 0.85);
-            border: 1px solid #f1c40f;
+            background: rgba(6, 7, 12, 0.85);
+            border: 1px solid rgba(241, 196, 15, 0.6);
             border-radius: 8px;
             padding: 8px 12px;
             margin-bottom: 6px;
@@ -200,9 +201,9 @@
         }
 
         .btn:disabled {
-            background-color: #7f8c8d !important;
+            background-color: #555 !important;
             cursor: not-allowed;
-            opacity: 0.5;
+            opacity: 0.4;
         }
 
         #start-btn { background-color: #00cec9; box-shadow: 0 3px 0 #00b894; color: #000; }
@@ -216,22 +217,22 @@
         
         .skill-active {
             animation: pulse 0.8s infinite;
-            box-shadow: 0 0 15px #e67e22 !important;
+            box-shadow: 0 0 10px #e67e22 !important;
         }
         @keyframes pulse {
             0% { opacity: 1; }
-            50% { opacity: 0.5; }
+            50% { opacity: 0.6; }
             100% { opacity: 1; }
         }
 
         .instructions {
             margin-top: 8px;
             font-size: 11px;
-            color: #b2bec3;
+            color: #95a5a6;
             line-height: 1.4;
         }
 
-        /* 彈窗 */
+        /* 彈窗（最高層級，且確保裡面的按鈕可被正常點選） */
         .modal {
             display: none;
             position: fixed;
@@ -239,26 +240,26 @@
             background: rgba(0,0,0,0.85);
             justify-content: center;
             align-items: center;
-            z-index: 10;
+            z-index: 9999; /* 確保在最上層 */
         }
 
         .modal-content {
-            background: #2d3436;
+            background: #22252a;
             padding: 25px;
             border-radius: 12px;
             text-align: center;
             max-width: 350px;
             border: 2px solid #00cec9;
-            box-shadow: 0 0 25px rgba(0, 206, 201, 0.4);
+            box-shadow: 0 0 20px rgba(0, 206, 201, 0.3);
         }
 
         .modal-input {
             width: 80%;
             padding: 8px;
             margin: 15px 0 5px 0;
-            border: 2px solid #b2bec3;
+            border: 2px solid #7f8c8d;
             border-radius: 4px;
-            background: #1e272e;
+            background: #15181c;
             color: #fff;
             font-size: 14px;
             text-align: center;
@@ -336,7 +337,7 @@
                 <label for="player-name-field" style="font-size: 13px; color: #b2bec3;">請輸入榮譽榜大名：</label><br>
                 <input type="text" id="player-name-field" class="modal-input" maxlength="10">
             </div>
-            <button class="btn" style="background-color: #00cec9; color:#000;" onclick="handleModalSubmit()">確定</button>
+            <button class="btn" style="background-color: #00cec9; color:#000; cursor: pointer;" onclick="handleModalSubmit()">確定</button>
         </div>
     </div>
 
@@ -358,7 +359,6 @@
         const ROW = 20;
         const COL = 10;
         
-        // 配合畫布 220x500，計算出精準的方塊微修長感尺寸
         const BLOCK_W = 22; 
         const BLOCK_H = 25; 
 
@@ -386,8 +386,9 @@
         let level = 1;
         let gameOver = false;
         let gameRunning = false;
-        let isPaused = false; // 新增：用於控制彈窗時方塊停止移動
-        
+        let isPaused = false; 
+        let currentModalIsLevelUp = false;
+
         let timerInterval = null;
         let gameInterval = null;
         let totalSeconds = 0;
@@ -480,12 +481,12 @@
         function drawBlock(x, y, colorIndex, isBomb = false) {
             ctx.fillStyle = isBomb ? '#e67e22' : COLORS[colorIndex];
             ctx.fillRect(x * BLOCK_W, y * BLOCK_H, BLOCK_W, BLOCK_H);
-            ctx.strokeStyle = 'rgba(10, 11, 18, 0.5)';
+            ctx.strokeStyle = 'rgba(6, 7, 12, 0.6)';
             ctx.strokeRect(x * BLOCK_W, y * BLOCK_H, BLOCK_W, BLOCK_H);
         }
 
         function drawGhostBlock(x, y) {
-            ctx.strokeStyle = bombActive ? 'rgba(230, 126, 34, 0.6)' : 'rgba(255, 255, 255, 0.2)'; 
+            ctx.strokeStyle = bombActive ? 'rgba(230, 126, 34, 0.5)' : 'rgba(255, 255, 255, 0.25)'; 
             ctx.setLineDash([4, 3]); 
             ctx.strokeRect(x * BLOCK_W + 1, y * BLOCK_H + 1, BLOCK_W - 2, BLOCK_H - 2);
             ctx.setLineDash([]); 
@@ -607,7 +608,6 @@
                     level++;
                     document.body.className = `lvl-${level}`;
                     
-                    // 第4關後右側轉換為半吸血鬼化戰鬥型態
                     if (level >= 4) {
                         charRightImg.src = 'kou_vampire.png';
                         textRightSpan.innerText = "夜守更(半吸血鬼)";
@@ -622,7 +622,7 @@
         }
 
         function drop() {
-            if (gameOver || isPaused) return; // 彈窗暫停時不下落
+            if (gameOver || isPaused) return; 
             if (!checkCollision(currentPiece.matrix, currentPiece.x, currentPiece.y + 1)) {
                 currentPiece.y++;
             } else {
@@ -691,7 +691,7 @@
             totalSeconds = 0;
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
-                if (!isPaused && gameRunning) { // 彈窗暫停時，時間也停止計時
+                if (!isPaused && gameRunning) { 
                     totalSeconds++;
                     let mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
                     let secs = (totalSeconds % 60).toString().padStart(2, '0');
@@ -700,11 +700,12 @@
             }, 1000);
         }
 
+        // ✨【關鍵修正】鍵盤事件獨立防護，不干涉滑鼠對彈窗按鈕的點擊
         document.addEventListener('keydown', event => {
             const affectedKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'w', 'W', 's', 'S', 'a', 'A', 'd', 'D', 'q', 'Q', 'e', 'E'];
             if (affectedKeys.includes(event.key)) event.preventDefault(); 
 
-            if (!gameRunning || gameOver || isPaused) return; // 暫停時鎖定鍵盤事件
+            if (!gameRunning || gameOver || isPaused) return; 
             const key = event.key.toLowerCase();
 
             if (event.key === 'ArrowLeft' || key === 'a') {
@@ -753,7 +754,6 @@
         function endGame(isWin) {
             gameOver = true;
             gameRunning = false;
-            isPaused = false;
             clearInterval(gameInterval);
             clearInterval(timerInterval);
 
@@ -768,7 +768,8 @@
         }
 
         function showModal(title, text, isLevelUpNotice = false) {
-            isPaused = true; // 打開彈窗的瞬間，把遊戲暫停
+            isPaused = true; 
+            currentModalIsLevelUp = isLevelUpNotice;
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-desc').innerText = text;
             const inputArea = document.getElementById('name-input-area');
@@ -786,7 +787,7 @@
 
         function closeModal() {
             document.getElementById('game-modal').style.display = 'none';
-            isPaused = false; // 點擊確定、關閉彈窗後，解除暫停，遊戲繼續！
+            isPaused = false; 
         }
 
         updateLeaderboardUI();
