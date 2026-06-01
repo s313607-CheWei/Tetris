@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>俄羅斯方塊 - 徹夜之歌主題</title>
     <style>
         body {
@@ -15,7 +15,7 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px 0;
-            overflow: hidden;
+            overflow-x: hidden;
             transition: background 1s ease;
             background-size: 40px 40px;
         }
@@ -104,7 +104,6 @@
             z-index: 2;
         }
 
-        /* 讓箭頭小尖角邊框的外觀顏色完全同步角色，不殘留粉色 */
         .speech-bubble.bubble-nazuna::before {
             border-color: #bf55ec transparent;
             bottom: -13px; left: 29px; border-width: 11px 11px 0; z-index: 1;
@@ -262,6 +261,60 @@
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
         .instructions { margin-top: 8px; font-size: 11px; color: #a4b0be; line-height: 1.4; }
+        
+        /* 📱 行動裝置虛擬搖桿樣式 (預設隱藏，手機板才顯示) */
+        .mobile-controls {
+            display: none;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 15px;
+            padding: 0 10px;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .touch-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .touch-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .t-btn {
+            background: rgba(20, 24, 40, 0.85);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            touch-action: manipulation;
+            transition: background 0.1s;
+        }
+        .t-btn:active {
+            background: rgba(0, 245, 255, 0.4);
+            border-color: #00f5ff;
+            transform: scale(0.92);
+        }
+
+        /* 特殊功能大按鍵 */
+        .t-btn.t-action { width: 70px; height: 70px; border-color: #bf55ec; font-size: 15px; }
+        .t-btn.t-action:active { background: rgba(191, 85, 236, 0.4); border-color: #bf55ec; }
+        
+        .t-btn.t-skill { border-color: #e67e22; font-size: 13px; border-radius: 8px; width: auto; height: 45px; padding: 0 15px; flex: 1; }
+        .t-btn.t-skill:active { background: rgba(230, 126, 34, 0.4); border-color: #e67e22; }
+
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(2, 3, 7, 0.95); justify-content: center; align-items: center; z-index: 9999;
@@ -269,6 +322,7 @@
         .modal-content {
             background: #11141a; padding: 30px; border-radius: 16px; text-align: center;
             max-width: 400px; width: 85%; border: 2px solid #bf55ec; box-shadow: 0 0 35px #bf55ec;
+            max-height: 85vh; overflow-y: auto;
         }
         .modal-input {
             width: 80%; padding: 10px; margin: 15px 0 5px 0; border: 2px solid #4b4b4b;
@@ -279,6 +333,32 @@
             margin: 20px 0; font-size: 13px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px;
         }
         .tutorial-title { color: #00f5ff; font-weight: bold; margin-bottom: 2px; }
+
+        /* 📱 響應式手機板面調整 */
+        @media (max-width: 768px) {
+            body { padding: 10px 0; justify-content: flex-start; overflow-y: auto; }
+            h1 { font-size: 24px; margin-bottom: 5px; }
+            .stage-wrapper { flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+            .char-selector-area { width: 90%; max-width: 340px; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; }
+            .speech-bubble { width: 100%; min-height: 35px; font-size: 12px; padding: 8px; }
+            .speech-bubble::after, .speech-bubble::before { display: none; } /* 手機板隱藏對話框小箭頭 */
+            .char-card { height: 90px; flex: 1; min-width: 140px; }
+            .char-card img { max-height: 95%; max-width: 95%; }
+            .char-name-tag { font-size: 9px; top: 5px; left: 5px; padding: 1px 4px; }
+            .game-container { padding: 10px; gap: 10px; width: 90%; max-width: 340px; box-sizing: border-box; }
+            #game-board { width: 140px; height: 318px; } /* 手機縮小畫布適配螢幕 */
+            .side-panel { width: 150px; }
+            .info-box { padding: 4px 8px; margin-bottom: 4px; }
+            .info-box h3 { font-size: 9px; }
+            .info-box p { font-size: 14px; }
+            #next-box { width: 50px; height: 50px; }
+            .leaderboard-box { padding: 4px 8px; margin-bottom: 4px; }
+            .leaderboard-box h3 { font-size: 10px; }
+            .leaderboard-list { font-size: 10px; }
+            .btn { padding: 6px; font-size: 11px; margin-top: 3px; }
+            .instructions { display: none; } /* 手機板隱藏鍵盤說明 */
+            .mobile-controls { display: block; } /* 手機板顯示虛擬按鍵 */
+        }
     </style>
 </head>
 <body class="lvl-1">
@@ -298,9 +378,9 @@
                 <img src="https://storage.moegirl.tw/moegirl/commons/2/20/Yofukashi_nazuna_face_2.png" alt="七草薺">
             </div>
 
-             <div class="char-card" id="card-kou" onclick="switchCharacter('kou')">
-                 <div class="char-name-tag">KOU / 夜守更</div>
-                 <img src="https://storage.moegirl.org.cn/moegirl/commons/f/f4/Yofukashi_kou_face_2.png" alt="夜守更">
+            <div class="char-card" id="card-kou" onclick="switchCharacter('kou')">
+                <div class="char-name-tag">KOU / 夜守更</div>
+                <img src="https://storage.moegirl.org.cn/moegirl/commons/f/f4/Yofukashi_kou_face_2.png" alt="夜守更">
             </div>
             
         </div>
@@ -311,12 +391,12 @@
             <div class="side-panel">
                 <div>
                     <div class="info-box" style="text-align: center;">
-                        <h3>NEXT / 下一個方塊</h3>
+                        <h3>NEXT / 下一個</h3>
                         <canvas id="next-box" width="80" height="80"></canvas>
                     </div>
 
                     <div class="leaderboard-box">
-                        <h3>🏆 歷史排行榜 (TOP 3)</h3>
+                        <h3>🏆 排行榜</h3>
                         <ul class="leaderboard-list" id="leaderboard">
                             <li class="leaderboard-item"><span class="player-name">1. 空缺</span><span>0</span></li>
                             <li class="leaderboard-item"><span class="player-name">2. 空缺</span><span>0</span></li>
@@ -353,6 +433,24 @@
         </div>
     </div>
 
+    <div class="mobile-controls">
+        <div class="touch-row">
+            <button class="t-btn t-skill" id="m-skill-q" onclick="useUltimateSkill()">全清Q</button>
+            <button class="t-btn t-skill" id="m-skill-e" onclick="activateBombSkill()" style="border-color:#e67e22;">炸彈E</button>
+        </div>
+        <div class="touch-row">
+            <div class="touch-group">
+                <button class="t-btn" onclick="handleMobileInput('left')">◀</button>
+                <button class="t-btn" onclick="handleMobileInput('right')">▶</button>
+                <button class="t-btn" onclick="handleMobileInput('drop')" style="border-color:#00f5ff; font-size:14px;">瞬落</button>
+            </div>
+            <div class="touch-group">
+                <button class="t-btn t-action" onclick="handleMobileInput('rotate')">旋轉</button>
+                <button class="t-btn t-action" onclick="handleMobileInput('down')" style="background:rgba(255,255,255,0.1);">▼</button>
+            </div>
+        </div>
+    </div>
+
     <div id="welcome-modal" class="modal" style="display: flex;">
         <div class="modal-content" style="border-color: #00f5ff; box-shadow: 0 0 35px #00f5ff;">
             <h2 style="color: #00f5ff; margin-top: 0; letter-spacing: 2px;">🌙 徹夜之歌：夜行方塊</h2>
@@ -360,28 +458,20 @@
             
             <div class="tutorial-grid">
                 <div>
-                    <div class="tutorial-title">⬅️ ➡️ 方向鍵 / A D</div>
-                    <div style="color: #bdc3c7;">左右移動方塊</div>
+                    <div class="tutorial-title">移動按鍵</div>
+                    <div style="color: #bdc3c7;">◀ ▶ 控制左右移動</div>
                 </div>
                 <div>
-                    <div class="tutorial-title">⬆️ 方向鍵 / W</div>
-                    <div style="color: #bdc3c7;">旋轉方塊方向</div>
+                    <div class="tutorial-title">旋轉按鍵</div>
+                    <div style="color: #bdc3c7;">旋轉方塊改變形狀</div>
                 </div>
                 <div>
-                    <div class="tutorial-title">⬇️ 方向鍵 / S</div>
-                    <div style="color: #bdc3c7;">加速方塊下落</div>
+                    <div class="tutorial-title">▼ 鍵 / 瞬落</div>
+                    <div style="color: #bdc3c7;">加速下落或瞬間接地</div>
                 </div>
                 <div>
-                    <div class="tutorial-title">Spacebar 空白鍵</div>
-                    <div style="color: #bdc3c7;">瞬間直落地落鎖定</div>
-                </div>
-                <div>
-                    <div class="tutorial-title">[Q] 鍵 - 一鍵全清</div>
-                    <div style="color: #a29bfe;">危急時重設全場 (限1次)</div>
-                </div>
-                <div>
-                    <div class="tutorial-title">[E] 鍵 - 集群炸彈</div>
-                    <div style="color: #ffbe76;">下一顆方塊會炸毀九宮格</div>
+                    <div class="tutorial-title">夜行專屬技能</div>
+                    <div style="color: #a29bfe;">支援全清與九宮格炸彈</div>
                 </div>
             </div>
             
@@ -400,7 +490,7 @@
             
             <div style="display: flex; gap: 10px; margin-top: 15px;">
                 <button id="modal-confirm-btn" class="btn" style="background-color: #00f5ff; color:#000; margin:0;" onclick="handleModalSubmit()">確定</button>
-                <button id="modal-retry-btn" class="btn" style="background-color: #e74c3c; color:#fff; margin:0;" onclick="handleModalRetry()">再熬一夜 (重新遊玩)</button>
+                <button id="modal-retry-btn" class="btn" style="background-color: #e74c3c; color:#fff; margin:0;" onclick="handleModalRetry()">再熬一夜</button>
             </div>
         </div>
     </div>
@@ -421,8 +511,10 @@
 
         const ROW = 20;
         const COL = 10;
-        const BLOCK_W = 22; 
-        const BLOCK_H = 25; 
+        
+        // ✨ 動態計算手機或桌機的單格寬高，讓響應式更精準
+        let BLOCK_W = canvas.width / COL; 
+        let BLOCK_H = canvas.height / ROW; 
 
         const COLORS = [
             null,
@@ -446,16 +538,16 @@
         let currentCharacter = 'nazuna';
         const QUOTES = {
             nazuna: {
-                idle: ["今晚，我們一起熬夜吧！", "怎麼啦？是在眷戀白天的世界嗎？", "熬夜，可是人類在對白天進行叛逆啊。"],
+                idle: ["今晚，我們一起「徹夜之歌」吧！", "怎麼啦？不點開始，是在眷戀白天的世界嗎？", "熬夜，可是人類在對白天進行叛逆啊。"],
                 clear: ["哼，這手速勉強能拿個及格分吧！", "不錯嘛！方塊被消掉的聲音真讓人興奮。", "再來再來！黑夜才剛剛開始呢！"],
                 levelup: ["哎呀，四周的顏色變了...你心跳是不是加速了？", "等級提升了！打起精神來，別死掉喔。"],
                 gameover: ["哎呀～太陽升起來了呢，今天就到此為止吧。", "輸掉了嗎？真可惜，不過今晚很好玩喔。"]
             },
             kou: {
-                idle: ["我...想變得更了解夜晚！", "只要跟著你，我是不是也能學會享受熬夜？", "我想看看這夜晚的極限。"],
+                idle: ["我...想變得更了解夜晚！", "只要跟著你，我是不是也能學會享受熬夜？", "點擊開始遊戲吧，我想看看夜晚的極限。"],
                 clear: ["哇！太厲害了，原來還可以這樣消除！", "好流暢的操作...這就是夜行者的實力嗎？", "感覺熱血沸騰起來了！"],
                 levelup: ["這就是更深邃的夜晚嗎...氣氛完全變了！", "方塊變快了，加油啊！我們能贏的！"],
-                gameover: ["啊...天亮了，體力到極限了嗎？", "辛苦了！雖然沒能通關，但能一起遊玩真好。"]
+                gameover: ["啊...天亮了，體力到極限了嗎？", "辛苦了！雖然沒能通關，但能一起熬夜真好。"]
             }
         };
 
@@ -510,6 +602,9 @@
         function initGrid() {
             grid = [];
             for (let r = 0; r < ROW; r++) { grid[r] = new Array(COL).fill(0); }
+            // 重新計算格線大小
+            BLOCK_W = canvas.width / COL;
+            BLOCK_H = canvas.height / ROW;
         }
 
         function updateLeaderboardUI() {
@@ -558,6 +653,7 @@
             if (bombActive) {
                 bombActive = false;
                 bombBtn.classList.remove('skill-active');
+                document.getElementById('m-skill-e').classList.remove('skill-active');
             }
 
             const id = nextPieceId;
@@ -578,7 +674,7 @@
         function drawNextPreview() {
             nextCtx.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
             const matrix = SHAPES[nextPieceId];
-            const size = 16; 
+            const size = nextCanvas.width / 5; 
             const offsetX = (nextCanvas.width - matrix[0].length * size) / 2;
             const offsetY = (nextCanvas.height - matrix.length * size) / 2;
 
@@ -784,6 +880,7 @@
             bombActive = true;
             bombAmmo--;
             bombBtn.classList.add('skill-active');
+            document.getElementById('m-skill-e').classList.add('skill-active');
             updateUI();
             draw();
         }
@@ -797,15 +894,27 @@
             scoreElement.innerText = score;
             levelElement.innerText = `${level} / 5`;
 
+            const mSkillQ = document.getElementById('m-skill-q');
+            const mSkillE = document.getElementById('m-skill-e');
+
             if (skillAvailable) {
                 skillBtn.innerText = "一鍵全清 [Q] (剩1次)";
                 skillBtn.disabled = false;
+                mSkillQ.innerText = "全清Q (1)";
+                mSkillQ.disabled = false;
             } else {
                 skillBtn.innerText = "技能1: 已使用";
                 skillBtn.disabled = true;
+                mSkillQ.innerText = "已使用";
+                mSkillQ.disabled = true;
             }
+            
             bombBtn.innerText = `集群炸彈 [E] (剩${bombAmmo}次)`;
-            if (bombAmmo <= 0) bombBtn.disabled = true;
+            mSkillE.innerText = `炸彈E (${bombAmmo})`;
+            if (bombAmmo <= 0) {
+                bombBtn.disabled = true;
+                mSkillE.disabled = true;
+            }
         }
 
         function startTimer() {
@@ -820,6 +929,23 @@
                     if (totalSeconds % 20 === 0) { triggerSpeech('idle'); }
                 }
             }, 1000);
+        }
+
+        /* 📱 虛擬按鍵事件分流處理器 */
+        function handleMobileInput(action) {
+            if (!gameRunning || gameOver || isPaused) return;
+            if (action === 'left') {
+                if (!checkCollision(currentPiece.matrix, currentPiece.x - 1, currentPiece.y)) { currentPiece.x--; draw(); }
+            } else if (action === 'right') {
+                if (!checkCollision(currentPiece.matrix, currentPiece.x + 1, currentPiece.y)) { currentPiece.x++; draw(); }
+            } else if (action === 'down') {
+                drop();
+            } else if (action === 'rotate') {
+                rotate();
+            } else if (action === 'drop') {
+                while (!checkCollision(currentPiece.matrix, currentPiece.x, currentPiece.y + 1)) { currentPiece.y++; }
+                lockPiece();
+            }
         }
 
         document.addEventListener('keydown', event => {
@@ -864,9 +990,9 @@
             bombActive = false;
             document.body.className = "lvl-1";
             
-            // ✨ 完美刪除：拔掉了會去偷換、覆寫男主角大頭貼網址的壞程式碼！
             document.querySelector('#card-kou .char-name-tag').innerText = "KOU / 夜守更";
             bombBtn.classList.remove('skill-active');
+            document.getElementById('m-skill-e').classList.remove('skill-active');
             
             triggerSpeech('idle');
             updateUI();
@@ -940,6 +1066,13 @@
             document.getElementById('game-modal').style.display = 'none';
             isPaused = false; 
         }
+
+        // 偵測螢幕大小變動時自動重新校正畫布格線
+        window.addEventListener('resize', () => {
+            BLOCK_W = canvas.width / COL;
+            BLOCK_H = canvas.height / ROW;
+            draw();
+        });
 
         updateLeaderboardUI();
         initGrid();
