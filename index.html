@@ -20,36 +20,36 @@
             background-size: 40px 40px;
         }
 
-        /* 徹夜之歌迷幻霓虹背景 */
+        /* 深夜霓虹網格背景 */
         body.lvl-1 {
-            background-color: #04060a;
-            background-image: linear-gradient(to right, rgba(155, 89, 182, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(155, 89, 182, 0.1) 1px, transparent 1px);
+            background-color: #030408;
+            background-image: linear-gradient(to right, rgba(186, 85, 211, 0.15) 1px, transparent 1px), linear-gradient(to bottom, rgba(186, 85, 211, 0.15) 1px, transparent 1px);
         }
         body.lvl-2 {
-            background-color: #06050a;
-            background-image: linear-gradient(to right, rgba(52, 152, 219, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(52, 152, 219, 0.1) 1px, transparent 1px);
+            background-color: #030408;
+            background-image: linear-gradient(to right, rgba(0, 191, 255, 0.15) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 191, 255, 0.15) 1px, transparent 1px);
         }
         body.lvl-3 {
-            background-color: #0a050e;
-            background-image: linear-gradient(to right, rgba(142, 68, 173, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(142, 68, 173, 0.1) 1px, transparent 1px);
+            background-color: #05020a;
+            background-image: linear-gradient(to right, rgba(148, 0, 211, 0.15) 1px, transparent 1px), linear-gradient(to bottom, rgba(148, 0, 211, 0.15) 1px, transparent 1px);
         }
         body.lvl-4 {
-            background-color: #0c0412;
-            background-image: linear-gradient(to right, rgba(231, 76, 60, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(231, 76, 60, 0.1) 1px, transparent 1px);
+            background-color: #08010c;
+            background-image: linear-gradient(to right, rgba(255, 0, 128, 0.15) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 0, 128, 0.15) 1px, transparent 1px);
         }
         body.lvl-5 {
-            background-color: #100212;
-            background-image: linear-gradient(to right, rgba(241, 196, 15, 0.12) 1px, transparent 1px), linear-gradient(to bottom, rgba(241, 196, 15, 0.12) 1px, transparent 1px);
+            background-color: #0a000a;
+            background-image: linear-gradient(to right, rgba(255, 215, 0, 0.2) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 215, 0, 0.2) 1px, transparent 1px);
         }
 
         h1 {
             margin: 0 0 15px 0;
             font-size: 32px;
-            text-shadow: 0 0 15px rgba(155, 89, 182, 0.8), 0 0 5px rgba(155, 89, 182, 0.5);
+            color: #fff;
+            text-shadow: 0 0 10px #bf55ec, 0 0 20px rgba(191, 85, 236, 0.6);
             letter-spacing: 4px;
         }
 
-        /* 總舞台 */
         .stage-wrapper {
             display: flex;
             align-items: flex-start;
@@ -57,7 +57,7 @@
             max-width: 1200px;
         }
 
-        /* 🎭 角色選擇與互動對話區容器 */
+        /* 左側角色卡片區 */
         .char-selector-area {
             display: flex;
             flex-direction: column;
@@ -65,53 +65,60 @@
             width: 200px;
         }
 
-        /* 動態霓虹對話框 */
+        /* 💬 對話框主體 */
         .speech-bubble {
             position: relative;
-            background: rgba(20, 24, 35, 0.95);
-            border: 2px solid #9b59b6;
-            box-shadow: 0 0 15px rgba(155, 89, 182, 0.5);
+            background: rgba(10, 12, 22, 0.95);
             border-radius: 12px;
             padding: 12px;
             font-size: 13px;
             line-height: 1.4;
             color: #fff;
-            min-height: 40px;
+            min-height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             transition: all 0.3s ease;
-        }
-        /* 對話框的小箭頭 */
-        .speech-bubble::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 30px;
-            border-width: 10px 10px 0;
-            border-style: solid;
-            border-color: rgba(20, 24, 35, 0.95) transparent;
-            display: block;
-            width: 0;
-        }
-        .speech-bubble::before {
-            content: '';
-            position: absolute;
-            bottom: -13px;
-            left: 29px;
-            border-width: 11px 11px 0;
-            border-style: solid;
-            border-color: #9b59b6 transparent;
-            display: block;
-            width: 0;
+            font-weight: bold;
         }
 
-        /* 單個角色按鈕卡片 */
+        /* 🛠️ 修正重點：利用 CSS 變數動態控制對話框與小箭頭顏色，絕不穿幫 */
+        .speech-bubble.bubble-nazuna {
+            border: 2px solid #bf55ec;
+            box-shadow: 0 0 15px #bf55ec;
+        }
+        .speech-bubble.bubble-kou {
+            border: 2px solid #00bfff;
+            box-shadow: 0 0 15px #00bfff;
+        }
+
+        /* 箭頭共用設定 */
+        .speech-bubble::after, .speech-bubble::before {
+            content: ''; position: absolute; bottom: -10px; left: 30px;
+            border-width: 10px 10px 0; border-style: solid;
+            width: 0; display: block;
+        }
+        .speech-bubble::after {
+            border-color: rgba(10, 12, 22, 0.95) transparent;
+            z-index: 2;
+        }
+
+        /* 修正：讓小箭頭的外邊框顏色完美同步 */
+        .speech-bubble.bubble-nazuna::before {
+            border-color: #bf55ec transparent;
+            bottom: -13px; left: 29px; border-width: 11px 11px 0; z-index: 1;
+        }
+        .speech-bubble.bubble-kou::before {
+            border-color: #00bfff transparent;
+            bottom: -13px; left: 29px; border-width: 11px 11px 0; z-index: 1;
+        }
+
+        /* 角色卡片 */
         .char-card {
             height: 200px;
             border-radius: 12px;
-            background: rgba(10, 12, 18, 0.6);
+            background: rgba(10, 12, 22, 0.8);
             border: 2px solid rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
@@ -121,78 +128,69 @@
             align-items: flex-end;
             justify-content: center;
         }
-        .char-card:hover {
-            transform: translateY(-3px);
-            background: rgba(15, 18, 28, 0.8);
-        }
-        /* 被選中時的高亮霓虹特效 */
+        .char-card:hover { transform: translateY(-3px); }
+
         .char-card.active-nazuna {
-            border-color: #9b59b6;
-            box-shadow: 0 0 20px rgba(155, 89, 182, 0.6);
-            background: rgba(155, 89, 182, 0.05);
+            border-color: #bf55ec;
+            box-shadow: 0 0 20px #bf55ec;
+            background: rgba(191, 85, 236, 0.08);
         }
         .char-card.active-kou {
-            border-color: #3498db;
-            box-shadow: 0 0 20px rgba(52, 152, 219, 0.6);
-            background: rgba(52, 152, 219, 0.05);
+            border-color: #00bfff;
+            box-shadow: 0 0 20px #00bfff;
+            background: rgba(0, 191, 255, 0.08);
         }
+
         .char-card img {
             position: absolute;
             bottom: 0;
-            max-width: 100%;
+            max-width: 90%;
             max-height: 90%;
             object-fit: contain;
-            filter: grayscale(60%);
+            filter: brightness(0.3) grayscale(70%);
             transition: all 0.3s ease;
+            z-index: 1;
         }
         .char-card.active-nazuna img, .char-card.active-kou img {
-            filter: grayscale(0%) drop-shadow(0 0 10px rgba(255,255,255,0.2));
+            filter: brightness(1.1) grayscale(0%) drop-shadow(0 0 10px rgba(255,255,255,0.3));
         }
+
         .char-name-tag {
             position: absolute;
             top: 10px;
             left: 10px;
-            background: rgba(0,0,0,0.7);
-            padding: 2px 8px;
+            background: rgba(0,0,0,0.85);
+            padding: 3px 8px;
             border-radius: 4px;
             font-size: 11px;
             font-weight: bold;
             letter-spacing: 1px;
             border: 1px solid rgba(255,255,255,0.2);
+            z-index: 2;
         }
-        .active-nazuna .char-name-tag { color: #9b59b6; border-color: #9b59b6; }
-        .active-kou .char-name-tag { color: #3498db; border-color: #3498db; }
-
-        .char-fallback-text {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            opacity: 0.7;
-        }
+        .active-nazuna .char-name-tag { color: #ff6cff; border-color: #bf55ec; }
+        .active-kou .char-name-tag { color: #00e5ff; border-color: #00bfff; }
 
         /* 遊戲中央主容器 */
         .game-container {
             display: flex;
             gap: 20px;
-            background: rgba(12, 14, 24, 0.9);
+            background: rgba(6, 8, 14, 0.95);
             padding: 20px;
             border-radius: 16px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
             backdrop-filter: blur(12px);
-            border: 2px solid #9b59b6;
-            box-shadow: 0 0 25px rgba(155, 89, 182, 0.4);
+            border: 2px solid #bf55ec;
+            box-shadow: 0 0 25px rgba(191, 85, 236, 0.5);
         }
 
-        /* 經典方塊比例遊戲板 */
         #game-board {
             width: 220px;
             height: 500px;
-            border: 2px solid rgba(255, 255, 255, 0.2); 
-            background-color: rgba(6, 7, 12, 0.98);
+            border: 2px solid rgba(255, 255, 255, 0.3); 
+            background-color: #06070c;
             border-radius: 8px;
         }
 
-        /* 側邊資訊面板 */
         .side-panel {
             display: flex;
             flex-direction: column;
@@ -201,18 +199,17 @@
         }
 
         .info-box {
-            background: rgba(6, 7, 12, 0.85);
+            background: rgba(3, 4, 8, 0.9);
             padding: 8px 12px;
             border-radius: 8px;
             margin-bottom: 6px;
-            border: 1px solid rgba(155, 89, 182, 0.3);
-            box-shadow: 0 0 10px rgba(155, 89, 182, 0.1);
+            border: 1px solid rgba(191, 85, 236, 0.4);
         }
 
         .info-box h3 {
             margin: 0 0 4px 0;
             font-size: 11px;
-            color: #b3a7ff;
+            color: #da70d6;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -221,22 +218,20 @@
             margin: 0;
             font-size: 18px;
             font-weight: bold;
-            color: #00cec9;
-            text-shadow: 0 0 10px rgba(0, 206, 201, 0.6);
+            color: #00f5ff;
+            text-shadow: 0 0 10px #00f5ff;
         }
 
         #next-box {
             display: block;
             margin: 5px auto 0 auto;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             border-radius: 4px;
         }
 
-        /* 排行榜 */
         .leaderboard-box {
-            background: rgba(6, 7, 12, 0.85);
-            border: 1px solid rgba(241, 196, 15, 0.8);
-            box-shadow: 0 0 10px rgba(241, 196, 15, 0.2);
+            background: rgba(3, 4, 8, 0.9);
+            border: 1px solid #f1c40f;
             border-radius: 8px;
             padding: 8px 12px;
             margin-bottom: 6px;
@@ -246,119 +241,44 @@
             font-size: 12px;
             color: #f1c40f;
             text-align: center;
-            text-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
         }
-        .leaderboard-list {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            font-size: 12px;
-        }
-        .leaderboard-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 3px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
+        .leaderboard-list { margin: 0; padding: 0; list-style: none; font-size: 12px; }
+        .leaderboard-item { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .leaderboard-item:last-child { border: none; }
 
-        /* 按鈕風格 */
         .btn {
-            color: white;
-            border: none;
-            padding: 10px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            width: 100%;
-            margin-top: 5px;
+            color: white; border: none; padding: 10px; font-size: 14px;
+            font-weight: bold; border-radius: 6px; cursor: pointer;
+            transition: all 0.2s; width: 100%; margin-top: 5px;
         }
+        .btn:disabled { background-color: #444 !important; cursor: not-allowed; opacity: 0.3; }
 
-        .btn:disabled {
-            background-color: #555 !important;
-            cursor: not-allowed;
-            opacity: 0.4;
-        }
-
-        #start-btn { background-color: #00cec9; box-shadow: 0 3px 0 #00b894; color: #000; }
+        #start-btn { background-color: #00f5ff; color: #000; font-weight: 900; }
         #start-btn:hover { background-color: #00b894; }
-
-        #skill-btn { background-color: #9b59b6; box-shadow: 0 3px 0 #8e44ad; }
-        #skill-btn:hover:not(:disabled) { background-color: #8e44ad; }
-
+        #skill-btn { background-color: #bf55ec; box-shadow: 0 3px 0 #8e44ad; }
         #bomb-btn { background-color: #e67e22; box-shadow: 0 3px 0 #d35400; }
-        #bomb-btn:hover:not(:disabled) { background-color: #d35400; }
         
-        .skill-active {
-            animation: pulse 0.8s infinite;
-            box-shadow: 0 0 15px #e67e22 !important;
-        }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.6; }
-            100% { opacity: 1; }
-        }
+        .skill-active { animation: pulse 0.8s infinite; box-shadow: 0 0 20px #e67e22 !important; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
-        .instructions {
-            margin-top: 8px;
-            font-size: 11px;
-            color: #a4b0be;
-            line-height: 1.4;
-        }
-
-        /* 彈窗 */
+        .instructions { margin-top: 8px; font-size: 11px; color: #a4b0be; line-height: 1.4; }
         .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(2, 3, 7, 0.95);
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 3, 7, 0.95); justify-content: center; align-items: center; z-index: 9999;
         }
-
         .modal-content {
-            background: #161920;
-            padding: 30px;
-            border-radius: 16px;
-            text-align: center;
-            max-width: 400px;
-            width: 85%;
-            border: 2px solid #9b59b6;
-            box-shadow: 0 0 30px rgba(155, 89, 182, 0.5);
+            background: #11141a; padding: 30px; border-radius: 16px; text-align: center;
+            max-width: 400px; width: 85%; border: 2px solid #bf55ec; box-shadow: 0 0 35px #bf55ec;
         }
-
         .modal-input {
-            width: 80%;
-            padding: 10px;
-            margin: 15px 0 5px 0;
-            border: 2px solid #4b4b4b;
-            border-radius: 6px;
-            background: #090a0f;
-            color: #fff;
-            font-size: 14px;
-            text-align: center;
+            width: 80%; padding: 10px; margin: 15px 0 5px 0; border: 2px solid #4b4b4b;
+            border-radius: 6px; background: #090a0f; color: #fff; font-size: 14px; text-align: center;
         }
-
         .tutorial-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            text-align: left;
-            margin: 20px 0;
-            font-size: 13px;
-            background: rgba(0,0,0,0.4);
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.05);
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; text-align: left;
+            margin: 20px 0; font-size: 13px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px;
         }
-        .tutorial-title {
-            color: #00cec9;
-            font-weight: bold;
-            margin-bottom: 2px;
-        }
+        .tutorial-title { color: #00f5ff; font-weight: bold; margin-bottom: 2px; }
     </style>
 </head>
 <body class="lvl-1">
@@ -369,20 +289,18 @@
         
         <div class="char-selector-area">
             
-            <div class="speech-bubble" id="char-speech">
+            <div class="speech-bubble bubble-nazuna" id="char-speech">
                 今晚，我們一起「徹夜之歌」吧！
             </div>
 
             <div class="char-card active-nazuna" id="card-nazuna" onclick="switchCharacter('nazuna')">
                 <div class="char-name-tag">NAZUNA / 七草薺</div>
-                <span class="char-fallback-text" id="text-left">七草薺</span>
-                <img src="nazuna.png" alt="七草薺" onload="document.getElementById('text-left').style.display='none';" onerror="this.style.display='none';">
+                <img src="https://images.uncyc.org/commons/c/c9/Nazuna_Nanakusa.png" alt="七草薺">
             </div>
 
             <div class="char-card" id="card-kou" onclick="switchCharacter('kou')">
                 <div class="char-name-tag">KOU / 夜守更</div>
-                <span class="char-fallback-text" id="text-right">夜守更</span>
-                <img src="kou_normal.png" alt="夜守更" onload="document.getElementById('text-right').style.display='none';" onerror="this.style.display='none';">
+                <img src="https://r2.erofus.com/char/85223/original.png" alt="夜守更">
             </div>
             
         </div>
@@ -436,8 +354,8 @@
     </div>
 
     <div id="welcome-modal" class="modal" style="display: flex;">
-        <div class="modal-content" style="border-color: #00cec9; box-shadow: 0 0 30px rgba(0, 206, 201, 0.4);">
-            <h2 style="color: #00cec9; margin-top: 0; letter-spacing: 2px;">🌙 徹夜之歌：夜行方塊</h2>
+        <div class="modal-content" style="border-color: #00f5ff; box-shadow: 0 0 35px #00f5ff;">
+            <h2 style="color: #00f5ff; margin-top: 0; letter-spacing: 2px;">🌙 徹夜之歌：夜行方塊</h2>
             <p style="font-size: 14px; color: #b2bec3; line-height: 1.5; margin-bottom: 0;">歡迎來到深夜的世界。在左側選擇你的夜行夥伴，一起打破長夜的方塊吧！</p>
             
             <div class="tutorial-grid">
@@ -467,7 +385,7 @@
                 </div>
             </div>
             
-            <button class="btn" style="background-color: #00cec9; color:#000; padding: 12px; font-size: 16px;" onclick="closeWelcomeAndStart()">開始吸血鬼夜行</button>
+            <button class="btn" style="background-color: #00f5ff; color:#000; padding: 12px; font-size: 16px; font-weight: 900;" onclick="closeWelcomeAndStart()">開始吸血鬼夜行</button>
         </div>
     </div>
 
@@ -481,8 +399,8 @@
             </div>
             
             <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button id="modal-confirm-btn" class="btn" style="background-color: #00cec9; color:#000; margin:0;" onclick="handleModalSubmit()">確定</button>
-                <button id="modal-retry-btn" class="btn" style="background-color: #e74c3c; color:#fff; margin:0; display:none;" onclick="handleModalRetry()">再熬一夜 (重新遊玩)</button>
+                <button id="modal-confirm-btn" class="btn" style="background-color: #00f5ff; color:#000; margin:0;" onclick="handleModalSubmit()">確定</button>
+                <button id="modal-retry-btn" class="btn" style="background-color: #e74c3c; color:#fff; margin:0;" onclick="handleModalRetry()">再熬一夜 (重新遊玩)</button>
             </div>
         </div>
     </div>
@@ -508,7 +426,7 @@
 
         const COLORS = [
             null,
-            '#ff7675', '#74b9ff', '#a29bfe', '#ffeaa7', '#e84393', '#00cec9', '#fdcb6e'
+            '#ff7675', '#74b9ff', '#a29bfe', '#ffeaa7', '#e84393', '#00f5ff', '#fdcb6e'
         ];
 
         const SHAPES = [
@@ -525,7 +443,6 @@
         const SPEED_LEVELS = { 1: 800, 2: 600, 3: 400, 4: 250, 5: 120 };
         const LEVEL_THRESHOLDS = { 1: 1000, 2: 3000, 3: 6000, 4: 10000, 5: 15000 };
 
-        // 🎭 夥伴系統資料庫
         let currentCharacter = 'nazuna';
         const QUOTES = {
             nazuna: {
@@ -561,34 +478,30 @@
         let currentPiece = { matrix: null, x: 0, y: 0, colorIndex: 0 };
         let nextPieceId = 1;
 
-        // 🎭 自由切換夥伴函數
+        // 🛠️ 修正：點擊切換時，對話框樣式類別跟著改變，完美修復箭頭顏色殘留 bug
         function switchCharacter(char) {
             currentCharacter = char;
             
             const cardNazuna = document.getElementById('card-nazuna');
             const cardKou = document.getElementById('card-kou');
             const mainContainer = document.getElementById('main-container');
-            const bubble = document.getElementById('char-speech');
 
             if(char === 'nazuna') {
                 cardNazuna.className = "char-card active-nazuna";
                 cardKou.className = "char-card";
-                mainContainer.style.borderColor = "#9b59b6";
-                mainContainer.style.boxShadow = "0 0 25px rgba(155, 89, 182, 0.4)";
-                bubble.style.borderColor = "#9b59b6";
-                bubble.style.boxShadow = "0 0 15px rgba(155, 89, 182, 0.5)";
+                mainContainer.style.borderColor = "#bf55ec";
+                mainContainer.style.boxShadow = "0 0 25px rgba(191, 85, 236, 0.5)";
+                speechBubble.className = "speech-bubble bubble-nazuna"; // 切換為薺樣式
             } else {
                 cardNazuna.className = "char-card";
                 cardKou.className = "char-card active-kou";
-                mainContainer.style.borderColor = "#3498db";
-                mainContainer.style.boxShadow = "0 0 25px rgba(52, 152, 219, 0.4)";
-                bubble.style.borderColor = "#3498db";
-                bubble.style.boxShadow = "0 0 15px rgba(52, 152, 219, 0.5)";
+                mainContainer.style.borderColor = "#00bfff";
+                mainContainer.style.boxShadow = "0 0 25px rgba(0, 191, 255, 0.5)";
+                speechBubble.className = "speech-bubble bubble-kou"; // 切換為更樣式
             }
             triggerSpeech('idle');
         }
 
-        // 💬 觸發講話台詞
         function triggerSpeech(type) {
             const pool = QUOTES[currentCharacter][type];
             const randomText = pool[Math.floor(Math.random() * pool.length)];
@@ -683,19 +596,21 @@
         function drawBlock(x, y, colorIndex, isBomb = false) {
             ctx.fillStyle = isBomb ? '#e67e22' : COLORS[colorIndex];
             ctx.fillRect(x * BLOCK_W, y * BLOCK_H, BLOCK_W, BLOCK_H);
-            ctx.strokeStyle = 'rgba(6, 7, 12, 0.6)';
+            ctx.strokeStyle = '#06070c';
             ctx.strokeRect(x * BLOCK_W, y * BLOCK_H, BLOCK_W, BLOCK_H);
         }
 
-        // ✨【視覺重點】高對比、超清晰的霓虹螢光白下落預測框
+        // 螢光白落點預測框
         function drawGhostBlock(x, y) {
-            ctx.strokeStyle = bombActive ? 'rgba(230, 126, 34, 0.8)' : '#ffffff'; 
+            ctx.strokeStyle = bombActive ? '#ffbe76' : '#ffffff'; 
             ctx.shadowColor = bombActive ? '#e67e22' : '#ffffff';
-            ctx.shadowBlur = bombActive ? 4 : 6; // 增加光暈感
+            ctx.shadowBlur = 10;
+            ctx.lineWidth = 1.5;
             ctx.setLineDash([4, 3]); 
             ctx.strokeRect(x * BLOCK_W + 1, y * BLOCK_H + 1, BLOCK_W - 2, BLOCK_H - 2);
             ctx.setLineDash([]); 
-            ctx.shadowBlur = 0; // 重置光暈以免影響其他畫筆
+            ctx.lineWidth = 1;
+            ctx.shadowBlur = 0;
         }
 
         function getGhostY() {
@@ -802,7 +717,7 @@
             if (linesClearedThisTurn > 0) {
                 const scoreRewards = [0, 100, 300, 500, 800];
                 score += scoreRewards[linesClearedThisTurn] * level;
-                triggerSpeech('clear'); // 觸發誇獎台詞
+                triggerSpeech('clear'); 
                 checkLevelUp();
                 updateUI();
             }
@@ -814,16 +729,15 @@
                     level++;
                     document.body.className = `lvl-${level}`;
                     
-                    // 當夜守更來到第四關（半吸血鬼化覺醒）
                     const kouImg = document.querySelector('#card-kou img');
                     const kouTag = document.querySelector('#card-kou .char-name-tag');
                     if (level >= 4) {
-                        kouImg.src = 'kou_vampire.png';
+                        kouImg.src = 'https://i.imgur.com/K2YwZ4K.png'; // 覺醒阿更網址
                         kouTag.innerText = "KOU / 夜守更(半吸血鬼)";
                     }
                     
                     updateGameSpeed();
-                    triggerSpeech('levelup'); // 觸發晉級台詞
+                    triggerSpeech('levelup'); 
                     showModal("LEVEL UP", `進入第 ${level} 關，黑夜變得更深邃了...`, true);
                 } else if (score >= LEVEL_THRESHOLDS[5]) {
                     endGame(true);
@@ -907,8 +821,6 @@
                     let mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
                     let secs = (totalSeconds % 60).toString().padStart(2, '0');
                     timeElement.innerText = `${mins}:${secs}`;
-                    
-                    // 每 20 秒夥伴隨機講一次閒置話語
                     if (totalSeconds % 20 === 0) { triggerSpeech('idle'); }
                 }
             }, 1000);
@@ -956,8 +868,7 @@
             bombActive = false;
             document.body.className = "lvl-1";
             
-            // 重置阿更圖片
-            document.querySelector('#card-kou img').src = 'kou_normal.png';
+            document.querySelector('#card-kou img').src = 'https://r2.erofus.com/char/85223/original.png';
             document.querySelector('#card-kou .char-name-tag').innerText = "KOU / 夜守更";
             bombBtn.classList.remove('skill-active');
             
@@ -977,7 +888,7 @@
             clearInterval(gameInterval);
             clearInterval(timerInterval);
             
-            triggerSpeech('gameover'); // 觸發結束台詞
+            triggerSpeech('gameover'); 
 
             let records = JSON.parse(localStorage.getItem('tetris_player_records')) || [];
             if(records.length > 0) {
