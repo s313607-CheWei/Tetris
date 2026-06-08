@@ -254,6 +254,8 @@
 
         #start-btn { background-color: #00f5ff; color: #000; font-weight: 900; }
         #start-btn:hover { background-color: #00b894; }
+        #pause-btn { background-color: #34495e; border: 1px solid rgba(255,255,255,0.2); }
+        #pause-btn:hover { background-color: #2c3e50; }
         #skill-btn { background-color: #bf55ec; box-shadow: 0 3px 0 #8e44ad; }
         #bomb-btn { background-color: #e67e22; box-shadow: 0 3px 0 #d35400; }
         
@@ -371,7 +373,7 @@
             border-radius: 14px;
             align-items: center;
             justify-content: center;
-            pointer-events: none; /* 防止倒數時誤觸 */
+            pointer-events: none;
         }
         #countdown-text {
             font-size: 80px;
@@ -385,6 +387,31 @@
             40% { transform: scale(1); opacity: 1; }
             80% { transform: scale(0.9); opacity: 1; }
             100% { transform: scale(0.8); opacity: 0; }
+        }
+
+        /* ⏸️ 遊戲暫停覆蓋層 */
+        #pause-overlay {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(4, 6, 12, 0.9);
+            z-index: 90;
+            border-radius: 14px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .pause-title {
+            font-size: 26px;
+            font-weight: 900;
+            color: #ff6cff;
+            text-shadow: 0 0 15px #bf55ec;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        .pause-sub {
+            font-size: 12px;
+            color: #a29bfe;
         }
 
         /* 📱 響應式手機板面調整 */
@@ -412,6 +439,7 @@
             .instructions { display: none; }
             .mobile-controls { display: block; }
             #countdown-text { font-size: 60px; }
+            .pause-title { font-size: 20px; }
         }
     </style>
 </head>
@@ -421,17 +449,20 @@
 
     <div class="stage-wrapper">
         
+        <!-- 🎭 左側：角色切換與動態對話區 -->
         <div class="char-selector-area">
             
             <div class="speech-bubble bubble-nazuna" id="char-speech">
                 今晚，我們一起「徹夜之歌」吧！
             </div>
 
+            <!-- 七草薺卡片 -->
             <div class="char-card active-nazuna" id="card-nazuna" onclick="switchCharacter('nazuna')">
                 <div class="char-name-tag">NAZUNA / 七草薺</div>
                 <img src="https://storage.moegirl.tw/moegirl/commons/2/20/Yofukashi_nazuna_face_2.png" alt="七草薺">
             </div>
 
+            <!-- 夜守更卡片 -->
             <div class="char-card" id="card-kou" onclick="switchCharacter('kou')">
                 <div class="char-name-tag">KOU / 夜守更</div>
                 <img src="https://storage.moegirl.org.cn/moegirl/commons/f/f4/Yofukashi_kou_face_2.png" alt="夜守更">
@@ -439,9 +470,17 @@
             
         </div>
 
+        <!-- 遊戲中央主容器 -->
         <div class="game-container" id="main-container">
+            <!-- ⏱️ 倒數計時覆蓋層 -->
             <div id="countdown-overlay">
                 <div id="countdown-text">3</div>
+            </div>
+
+            <!-- ⏸️ 暫停光幕覆蓋層 -->
+            <div id="pause-overlay">
+                <div class="pause-title">🌙 夜行暫停中</div>
+                <div class="pause-sub">按下 [P]、[Esc] 或暫停鈕繼續</div>
             </div>
 
             <canvas id="game-board" width="220" height="500"></canvas>
@@ -479,29 +518,33 @@
                 <div>
                     <button id="skill-btn" class="btn" onclick="useUltimateSkill()">一鍵全清 [Q] (剩1次)</button>
                     <button id="bomb-btn" class="btn" onclick="activateBombSkill()">集群炸彈 [E] (剩20次)</button>
+                    <button id="pause-btn" class="btn" onclick="togglePauseGame()" disabled>暫停遊戲 [P]</button>
                     <button id="start-btn" class="btn" onclick="triggerStartCountdown()">開始遊戲</button>
                 </div>
 
                 <div class="instructions">
                     <strong>操作：</strong> ← ➡️ 移動 | ⬆️ 旋轉<br>
                     ⬇️ 加速下落 | 空白鍵 瞬落<br>
-                    <b>[Q]</b> 一鍵清空 | <b>[E]</b> 九宮格炸彈
+                    <b>[P] / [Esc]</b> 暫停 | <b>[Q]</b> 全清 | <b>[E]</b> 炸彈
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- 📱 行動裝置虛擬控制按鍵區 -->
     <div class="mobile-controls">
         <div class="touch-row">
             <button class="t-btn t-skill" id="m-skill-q" onclick="useUltimateSkill()">全清Q</button>
             <button class="t-btn t-skill" id="m-skill-e" onclick="activateBombSkill()" style="border-color:#e67e22;">炸彈E</button>
         </div>
         <div class="touch-row">
+            <!-- 左手組 -->
             <div class="touch-group">
                 <button class="t-btn" onclick="handleMobileInput('left')">◀</button>
                 <button class="t-btn" onclick="handleMobileInput('right')">▶</button>
                 <button class="t-btn t-action" onclick="handleMobileInput('rotate')" style="width:60px; height:60px; font-size:16px;">旋轉</button>
             </div>
+            <!-- 右手組 -->
             <div class="touch-group">
                 <button class="t-btn" onclick="handleMobileInput('down')" style="background:rgba(255,255,255,0.1);">▼</button>
                 <button class="t-btn t-action" onclick="handleMobileInput('drop')" style="border-color:#00f5ff; font-size:15px;">瞬落</button>
@@ -509,6 +552,7 @@
         </div>
     </div>
 
+    <!-- 📋 開局教學彈窗 -->
     <div id="welcome-modal" class="modal" style="display: flex;">
         <div class="modal-content" style="border-color: #00f5ff; box-shadow: 0 0 35px #00f5ff;">
             <h2 style="color: #00f5ff; margin-top: 0; letter-spacing: 2px;">🌙 徹夜之歌：夜行方塊</h2>
@@ -518,17 +562,17 @@
                 <div class="step-item">
                     <span class="step-badge">STEP 1</span>
                     <strong>選擇夜行夥伴：</strong>
-                    <span style="color:#bdc3c7;">點擊後方的卡片可在<b>七草薺</b>與<b>夜守更</b>之間切換，他們會給予你不同的互動台詞喔。</span>
+                    <span style="color:#bdc3c7;">點擊後方的卡片可在<b>七草薺</b>與<b>夜守更</b>之間切換。</span>
                 </div>
                 <div class="step-item">
                     <span class="step-badge">STEP 2</span>
                     <strong>熟悉按鍵配置：</strong>
-                    <span style="color:#bdc3c7;">手機版左手控移動與旋轉、右手控下落。電腦版可用鍵盤方向鍵、WASD與Q/E技能鍵。</span>
+                    <span style="color:#bdc3c7;">除了移動與技能，遊玩中隨時可以按下 <b>[P]</b> 或 <b>[Esc]</b> 來暫停喘口氣。</span>
                 </div>
                 <div class="step-item">
                     <span class="step-badge cyan">STEP 3</span>
                     <strong>善用專屬特技：</strong>
-                    <span style="color:#a29bfe;">遇到危險時，按下 <b>全清 [Q]</b> 能淨化整個世界；使用 <b>炸彈 [E]</b> 能引爆周圍方塊！</span>
+                    <span style="color:#a29bfe;">遇到危險時，按下 <b>全清 [Q]</b> 或 <b>炸彈 [E]</b> 來扭轉戰局！</span>
                 </div>
             </div>
 
@@ -543,10 +587,11 @@
                 </div>
             </div>
             
-            <button class="btn" style="background-color: #00f5ff; color:#000; padding: 12px; font-size: 16px; font-weight: 900;" onclick="closeWelcomeAndStart()">準備好就開始遊戲！</button>
+            <button class="btn" style="background-color: #00f5ff; color:#000; padding: 12px; font-size: 16px; font-weight: 900;" onclick="closeWelcomeAndStart()">準備好遊戲開始！</button>
         </div>
     </div>
 
+    <!-- 結算/晉級 彈窗 -->
     <div id="game-modal" class="modal">
         <div class="modal-content">
             <h2 id="modal-title">遊戲結束</h2>
@@ -574,12 +619,14 @@
         const timeElement = document.getElementById('time');
         const skillBtn = document.getElementById('skill-btn');
         const bombBtn = document.getElementById('bomb-btn');
+        const pauseBtn = document.getElementById('pause-btn');
         const playerNameField = document.getElementById('player-name-field');
         const speechBubble = document.getElementById('char-speech');
 
-        // 倒數相關 DOM
+        // 覆蓋層 DOM
         const countdownOverlay = document.getElementById('countdown-overlay');
         const countdownText = document.getElementById('countdown-text');
+        const pauseOverlay = document.getElementById('pause-overlay');
 
         const ROW = 20;
         const COL = 10;
@@ -612,13 +659,15 @@
                 idle: ["今晚，我們一起「徹夜之歌」吧！", "怎麼啦？不點開始，是在眷戀白天的世界嗎？", "熬夜，可是人類在對白天進行叛逆啊。"],
                 clear: ["哼，這手速勉強能拿個及格分吧！", "不錯嘛！方塊被消掉的聲音真讓人興奮。", "再來再來！黑夜才剛剛開始呢！"],
                 levelup: ["哎呀，四周的顏色變了...你心跳是不是加速了？", "等級提升了！打起精神來，別死掉喔。"],
-                gameover: ["哎呀～太陽升起來了呢，今天就到此為止吧。", "輸掉了嗎？真可惜，不過今晚很好玩喔。"]
+                gameover: ["哎呀～太陽升起來了呢，今天就到此為止吧。", "輸掉了嗎？真可惜，不過今晚很好玩喔。"],
+                pause: ["呼...累了嗎？稍微休息一下，喝口「燃料」吧。", "突然停下來，在想色色的事情嗎？"]
             },
             kou: {
                 idle: ["我...想變得更了解夜晚！", "只要跟著你，我是不是也能學會享受熬夜？", "點擊開始遊戲吧，我想看看夜晚的極限。"],
                 clear: ["哇！太厲害了，原來還可以這樣消除！", "好流暢的操作...這就是夜行者的實力嗎？", "感覺熱血沸騰起來了！"],
                 levelup: ["這就是更深邃的夜晚嗎...氣氛完全變了！", "方塊變快了，加油啊！我們能贏的！"],
-                gameover: ["啊...天亮了，體力到極限了嗎？", "辛苦了！雖然沒能通關，但能一起熬夜真好。"]
+                gameover: ["啊...天亮了，體力到極限了嗎？", "辛苦了！雖然沒能通關，但能一起熬夜真好。"],
+                pause: ["呼，剛才方塊掉好快，差點反應不過來...", "休息好了嗎？好了就隨時出發吧！"]
             }
         };
 
@@ -628,7 +677,7 @@
         let gameOver = false;
         let gameRunning = false;
         let isPaused = false; 
-        let isCountingDown = false; // 追蹤是否正在進行開局倒數
+        let isCountingDown = false; 
         let currentModalIsLevelUp = false;
 
         let timerInterval = null;
@@ -662,7 +711,11 @@
                 mainContainer.style.boxShadow = "0 0 25px rgba(0, 191, 255, 0.5)";
                 speechBubble.className = "speech-bubble bubble-kou"; 
             }
-            triggerSpeech('idle');
+            if (isPaused) {
+                triggerSpeech('pause');
+            } else {
+                triggerSpeech('idle');
+            }
         }
 
         function triggerSpeech(type) {
@@ -956,9 +1009,34 @@
             draw();
         }
 
+        // ⏸️ 新增：切換暫停狀態功能
+        function togglePauseGame() {
+            if (!gameRunning || gameOver || isCountingDown) return;
+
+            isPaused = !isPaused;
+
+            if (isPaused) {
+                // 進入暫停
+                clearInterval(gameInterval);
+                pauseOverlay.style.display = 'flex';
+                pauseBtn.innerText = "繼續遊戲 [P]";
+                pauseBtn.style.backgroundColor = "#2ecc71";
+                triggerSpeech('pause');
+            } else {
+                // 解除暫停
+                pauseOverlay.style.display = 'none';
+                pauseBtn.innerText = "暫停遊戲 [P]";
+                pauseBtn.style.backgroundColor = "#34495e";
+                triggerSpeech('idle');
+                updateGameSpeed(); // 重新恢復核心下落
+            }
+        }
+
         function updateGameSpeed() {
             clearInterval(gameInterval);
-            gameInterval = setInterval(drop, SPEED_LEVELS[level]);
+            if (!isPaused) {
+                gameInterval = setInterval(drop, SPEED_LEVELS[level]);
+            }
         }
 
         function updateUI() {
@@ -1002,7 +1080,7 @@
             }, 1000);
         }
 
-        /* 📱 虛擬按鍵事件分流處理器 */
+        /* 📱 虛擬按鍵事件處理 */
         function handleMobileInput(action) {
             if (!gameRunning || gameOver || isPaused || isCountingDown) return;
             if (action === 'left') {
@@ -1020,11 +1098,18 @@
         }
 
         document.addEventListener('keydown', event => {
-            const affectedKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'w', 'W', 's', 'S', 'a', 'A', 'd', 'D', 'q', 'Q', 'e', 'E'];
+            const affectedKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'w', 'W', 's', 'S', 'a', 'A', 'd', 'D', 'q', 'Q', 'e', 'E', 'p', 'P', 'Escape'];
             if (affectedKeys.includes(event.key)) event.preventDefault(); 
 
-            if (!gameRunning || gameOver || isPaused || isCountingDown) return; 
             const key = event.key.toLowerCase();
+
+            // 在遊戲進行中，不論是否暫停，都可以按 P 或 Esc 進行切換
+            if (gameRunning && !gameOver && !isCountingDown && (key === 'p' || event.key === 'Escape')) {
+                togglePauseGame();
+                return;
+            }
+
+            if (!gameRunning || gameOver || isPaused || isCountingDown) return; 
 
             if (event.key === 'ArrowLeft' || key === 'a') {
                 if (!checkCollision(currentPiece.matrix, currentPiece.x - 1, currentPiece.y)) { currentPiece.x--; draw(); }
@@ -1049,25 +1134,28 @@
             triggerStartCountdown();
         }
 
-        // ⏱️ 新增：處理 3, 2, 1 開局倒數功能
         function triggerStartCountdown() {
-            // 如果原本在玩，先清理舊計時器
             clearInterval(gameInterval);
             clearInterval(timerInterval);
             
+            // 確保暫停狀態重置
+            isPaused = false;
+            pauseOverlay.style.display = 'none';
+            pauseBtn.innerText = "暫停遊戲 [P]";
+            pauseBtn.style.backgroundColor = "#34495e";
+            pauseBtn.disabled = false; // 啟用暫停按鈕
+
             isCountingDown = true;
             countdownOverlay.style.display = 'flex';
             
             let count = 3;
             countdownText.innerText = count;
             
-            // 重置畫布與資料，讓玩家在倒數時可以看到乾淨的版面與第一個方塊
             initGrid();
             score = 0;
             level = 1;
             gameOver = false;
             gameRunning = true;
-            isPaused = false;
             skillAvailable = true;
             bombAmmo = 20;
             bombActive = false;
@@ -1091,7 +1179,6 @@
                     countdownOverlay.style.display = 'none';
                     isCountingDown = false;
                     
-                    // 倒數結束，正式啟動遊戲計時與核心落下機制
                     startTimer();
                     updateGameSpeed();
                     triggerSpeech('idle');
@@ -1105,6 +1192,7 @@
             gameRunning = false;
             clearInterval(gameInterval);
             clearInterval(timerInterval);
+            pauseBtn.disabled = true; // 遊戲結束禁用暫停
             
             triggerSpeech('gameover'); 
 
@@ -1125,6 +1213,7 @@
 
         function showModal(title, text, isLevelUpNotice = false) {
             isPaused = true; 
+            clearInterval(gameInterval); // 彈窗時停止下落
             currentModalIsLevelUp = isLevelUpNotice;
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-desc').innerText = text;
@@ -1161,6 +1250,9 @@
         function closeModal() {
             document.getElementById('game-modal').style.display = 'none';
             isPaused = false; 
+            if (currentModalIsLevelUp && gameRunning) {
+                updateGameSpeed(); // 升級彈窗關閉後恢復下落
+            }
         }
 
         window.addEventListener('resize', () => {
