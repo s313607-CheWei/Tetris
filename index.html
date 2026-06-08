@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>俄羅斯方塊 - 徹夜之歌主題</title>
+    <title>俄羅斯方塊</title>
     <style>
         body {
             color: #fff;
@@ -130,7 +130,7 @@
             100% { transform: translateY(650px) rotate(360deg); opacity: 0; }
         }
 
-        /* 🧱 全新精緻大廳方塊牆裝飾（取代原本奇怪的孤零零T字） */
+        /* 🧱 大廳方塊牆裝飾 */
         .lobby-tetris-art-wall {
             display: grid;
             grid-template-columns: repeat(6, 24px);
@@ -145,14 +145,13 @@
             box-shadow: 0 0 20px rgba(191, 85, 236, 0.2);
         }
         .wall-b { border-radius: 4px; }
-        /* 使用經典俄羅斯方塊配色填滿拼圖牆 */
         .wb-i { background: #00f5ff; box-shadow: 0 0 10px #00f5ff; }
         .wb-t { background: #bf55ec; box-shadow: 0 0 10px #bf55ec; }
         .wb-o { background: #ffeaa7; box-shadow: 0 0 10px #ffeaa7; }
         .wb-l { background: #ff9f43; box-shadow: 0 0 10px #ff9f43; }
         .wb-z { background: #ff7675; box-shadow: 0 0 10px #ff7675; }
 
-        /* 👤 最初始的遊戲內人物對話框排版 */
+        /* 👤 遊戲內人物對話框排版 */
         .char-container {
             display: flex;
             align-items: center;
@@ -170,7 +169,7 @@
             box-shadow: 0 0 15px rgba(0, 191, 255, 0.4);
         }
         
-        /* 🎨 不死圖！使用純 CSS 幾何技術繪製的永久頭貼 */
+        /* 🖼️ 換回原本圖片的頭貼外框 */
         .avatar-box {
             width: 65px;
             height: 65px;
@@ -178,32 +177,37 @@
             border: 2px solid #fff;
             flex-shrink: 0;
             box-shadow: 0 0 10px rgba(255,255,255,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             position: relative;
             overflow: hidden;
             background: #0d0e15;
         }
-        /* CSS 幾何小薺圖示 (紫粉色神秘十字) */
-        .avatar-nazuna {
-            width: 30px; height: 30px;
-            background: #bf55ec;
-            clip-path: polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);
-            box-shadow: 0 0 15px #bf55ec;
-            animation: pulseArt 2s infinite alternate;
+
+        /* 頭貼圖片樣式：填滿且維持比例 */
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
-        /* CSS 幾何阿更圖示 (湛藍色核心方塊) */
-        .avatar-kou {
-            width: 25px; height: 25px;
-            background: #00bfff;
-            transform: rotate(45deg);
-            box-shadow: 0 0 15px #00bfff;
-            animation: pulseArt 2s infinite alternate-reverse;
+
+        /* 如果外部圖片加載失敗時的安全備用樣式 */
+        .avatar-img.img-error {
+            display: none;
         }
-        @keyframes pulseArt {
-            0% { transform: scale(0.9) rotate(0deg); opacity: 0.8; }
-            100% { transform: scale(1.1) rotate(10deg); opacity: 1; }
+        .avatar-fallback {
+            display: none;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .img-error + .avatar-fallback {
+            display: flex;
+            background: linear-gradient(135deg, #1e1f29, #0d0e15);
+            color: #bf55ec;
+            text-shadow: 0 0 5px #bf55ec;
         }
 
         .speech-bubble {
@@ -441,7 +445,7 @@
                 </div>
             </div>
             
-            <div class="game-sub-title">徹夜之歌 Call of the Night</div>
+            <div class="game-sub-title"> Call of the Night</div>
             
             <div class="lobby-tetris-art-wall">
                 <div class="wall-b wb-i"></div><div class="wall-b wb-t"></div><div class="wall-b wb-t"></div><div class="wall-b wb-t"></div><div class="wall-b wb-o"></div><div class="wall-b wb-o"></div>
@@ -461,7 +465,7 @@
             </div>
 
             <div id="pause-overlay">
-                <div class="pause-title">🌙 夜行暫停中</div>
+                <div class="pause-title">🌙 遊戲暫停中</div>
                 <div class="pause-sub">按下 [P]、[Esc] 或暫停鈕繼續</div>
             </div>
 
@@ -470,8 +474,9 @@
             <div class="side-panel">
                 <div>
                     <div class="char-container" id="game-char-box">
-                        <div class="avatar-box" id="char-avatar-wrapper">
-                            <div id="char-visual" class="avatar-nazuna"></div>
+                        <div class="avatar-box">
+                            <img id="char-avatar" class="avatar-img" src="" alt="頭貼" onerror="this.classList.add('img-error')">
+                            <div class="avatar-fallback" id="char-fallback-text">夜</div>
                         </div>
                         <div class="speech-bubble" id="char-speech">
                             今晚，我想吃Foodpanda！
@@ -582,9 +587,10 @@
         const pauseBtn = document.getElementById('pause-btn');
         const playerNameField = document.getElementById('player-name-field');
         
-        // 獲取純 CSS 不死幾何頭像節點
+        // 獲取圖片頭貼相關節點
         const charContainer = document.getElementById('game-char-box');
-        const charVisual = document.getElementById('char-visual');
+        const charAvatar = document.getElementById('char-avatar');
+        const charFallbackText = document.getElementById('char-fallback-text');
         const speechBubble = document.getElementById('char-speech');
 
         const menuPanel = document.getElementById('menu-panel');
@@ -620,6 +626,12 @@
 
         let currentCharacter = 'nazuna';
         
+        // 🔗 換回你原本想使用的頭像圖片網址
+        const AVATAR_URLS = {
+            nazuna: "https://i.ibb.co/vcbpXv0/image.png", // 七草小薺原本的圖片網址
+            kou: "https://i.ibb.co/YyY43m3/image.png"     // 夜守更原本的圖片網址
+        };
+
         const QUOTES = {
             nazuna: {
                 idle: ["今晚，我想吃Foodpanda！", "怎麼啦？不移動方塊，是在浪費時間嗎？", "過度熬夜，可是對人類身體不好啊。"],
@@ -687,8 +699,8 @@
 
         function openTutorialModal() {
             modalType = "tutorial";
-            document.getElementById('modal-title').innerText = "📋 徹夜作戰指南";
-            document.getElementById('modal-desc').innerText = "歡迎來到深夜街頭。在太陽升起前，用完美的方塊消除節奏和夥伴一起活下去吧！";
+            document.getElementById('modal-title').innerText = "📋 操作指南";
+            document.getElementById('modal-desc').innerText = "歡迎來到俄羅斯方塊。在遊戲結束前，用完美的方塊消除節奏和夥伴一起活下去吧！";
             
             document.getElementById('modal-tutorial-area').style.display = 'grid'; 
             document.getElementById('name-input-area').style.display = 'none';
@@ -706,16 +718,21 @@
             triggerStartCountdown();
         }
 
-        // 🎨 核心：改為動態控制純 CSS 類別，告別 Image Dead Link 窘境
+        // 動態切換對話與圖片
         function triggerSpeech(type) {
             currentCharacter = Math.random() > 0.5 ? 'nazuna' : 'kou';
 
+            charAvatar.classList.remove('img-error'); // 重置錯誤狀態
+            charAvatar.src = AVATAR_URLS[currentCharacter];
+
             if (currentCharacter === 'nazuna') {
                 charContainer.classList.remove('border-kou');
-                charVisual.className = 'avatar-nazuna';
+                charFallbackText.innerText = "薺";
+                charFallbackText.style.color = "#bf55ec";
             } else {
                 charContainer.classList.add('border-kou');
-                charVisual.className = 'avatar-kou';
+                charFallbackText.innerText = "更";
+                charFallbackText.style.color = "#00bfff";
             }
 
             const pool = QUOTES[currentCharacter][type];
