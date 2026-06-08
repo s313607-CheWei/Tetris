@@ -93,7 +93,6 @@
             box-shadow: 0 0 15px #00bfff;
         }
 
-        /* 箭頭共用底層設定 */
         .speech-bubble::after, .speech-bubble::before {
             content: ''; position: absolute; bottom: -10px; left: 30px;
             border-width: 10px 10px 0; border-style: solid;
@@ -172,6 +171,7 @@
 
         /* 遊戲中央主容器 */
         .game-container {
+            position: relative;
             display: flex;
             gap: 20px;
             background: rgba(6, 8, 14, 0.95);
@@ -262,7 +262,7 @@
 
         .instructions { margin-top: 8px; font-size: 11px; color: #a4b0be; line-height: 1.4; }
         
-        /* 📱 行動裝置虛擬搖桿樣式 (預設隱藏，手機板才顯示) */
+        /* 📱 行動裝置虛擬搖桿樣式 */
         .mobile-controls {
             display: none;
             width: 100%;
@@ -308,31 +308,84 @@
             transform: scale(0.92);
         }
 
-        /* 特殊功能大按鍵 */
         .t-btn.t-action { width: 70px; height: 70px; border-color: #bf55ec; font-size: 15px; }
         .t-btn.t-action:active { background: rgba(191, 85, 236, 0.4); border-color: #bf55ec; }
         
         .t-btn.t-skill { border-color: #e67e22; font-size: 13px; border-radius: 8px; width: auto; height: 45px; padding: 0 15px; flex: 1; }
         .t-btn.t-skill:active { background: rgba(230, 126, 34, 0.4); border-color: #e67e22; }
 
+        /* 視窗與教學樣式 */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(2, 3, 7, 0.95); justify-content: center; align-items: center; z-index: 9999;
         }
         .modal-content {
-            background: #11141a; padding: 30px; border-radius: 16px; text-align: center;
-            max-width: 400px; width: 85%; border: 2px solid #bf55ec; box-shadow: 0 0 35px #bf55ec;
-            max-height: 85vh; overflow-y: auto;
+            background: #11141a; padding: 25px; border-radius: 16px; text-align: center;
+            max-width: 420px; width: 85%; border: 2px solid #bf55ec; box-shadow: 0 0 35px #bf55ec;
+            max-height: 90vh; overflow-y: auto;
         }
         .modal-input {
             width: 80%; padding: 10px; margin: 15px 0 5px 0; border: 2px solid #4b4b4b;
             border-radius: 6px; background: #090a0f; color: #fff; font-size: 14px; text-align: center;
         }
+        
+        /* 📋 詳細步驟導引區 */
+        .step-container {
+            text-align: left;
+            margin: 15px 0;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px 15px;
+        }
+        .step-item {
+            margin-bottom: 10px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .step-item:last-child { margin-bottom: 0; }
+        .step-badge {
+            background: #bf55ec;
+            color: #fff;
+            font-weight: bold;
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-right: 6px;
+            font-size: 11px;
+        }
+        .step-badge.cyan { background: #00f5ff; color: #000; }
+
         .tutorial-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; text-align: left;
-            margin: 20px 0; font-size: 13px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left;
+            margin-bottom: 10px; font-size: 12px; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px;
         }
         .tutorial-title { color: #00f5ff; font-weight: bold; margin-bottom: 2px; }
+
+        /* ⏱️ 畫面上大大的倒數計時 */
+        #countdown-overlay {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(6, 8, 14, 0.85);
+            z-index: 100;
+            border-radius: 14px;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none; /* 防止倒數時誤觸 */
+        }
+        #countdown-text {
+            font-size: 80px;
+            font-weight: 900;
+            color: #00f5ff;
+            text-shadow: 0 0 20px #00f5ff, 0 0 40px #bf55ec;
+            animation: countScale 1s ease-in-out infinite;
+        }
+        @keyframes countScale {
+            0% { transform: scale(1.5); opacity: 0; }
+            40% { transform: scale(1); opacity: 1; }
+            80% { transform: scale(0.9); opacity: 1; }
+            100% { transform: scale(0.8); opacity: 0; }
+        }
 
         /* 📱 響應式手機板面調整 */
         @media (max-width: 768px) {
@@ -358,6 +411,7 @@
             .btn { padding: 6px; font-size: 11px; margin-top: 3px; }
             .instructions { display: none; }
             .mobile-controls { display: block; }
+            #countdown-text { font-size: 60px; }
         }
     </style>
 </head>
@@ -367,29 +421,29 @@
 
     <div class="stage-wrapper">
         
-        <!-- 🎭 左側：角色切換與動態對話區 -->
         <div class="char-selector-area">
             
             <div class="speech-bubble bubble-nazuna" id="char-speech">
                 今晚，我們一起「徹夜之歌」吧！
             </div>
 
-            <!-- 七草薺卡片 -->
             <div class="char-card active-nazuna" id="card-nazuna" onclick="switchCharacter('nazuna')">
                 <div class="char-name-tag">NAZUNA / 七草薺</div>
-                <img src="https://raw.githubusercontent.com/s313607-CheWei/Tetris/refs/heads/main/Yofukashi_nazuna_face_2.png" alt="七草薺">
+                <img src="https://storage.moegirl.tw/moegirl/commons/2/20/Yofukashi_nazuna_face_2.png" alt="七草薺">
             </div>
 
-            <!-- 夜守更卡片 -->
             <div class="char-card" id="card-kou" onclick="switchCharacter('kou')">
                 <div class="char-name-tag">KOU / 夜守更</div>
-                <img src="https://raw.githubusercontent.com/s313607-CheWei/Tetris/refs/heads/main/Yofukashi_kou_face_2.png" alt="夜守更">
+                <img src="https://storage.moegirl.org.cn/moegirl/commons/f/f4/Yofukashi_kou_face_2.png" alt="夜守更">
             </div>
             
         </div>
 
-        <!-- 遊戲中央主容器 -->
         <div class="game-container" id="main-container">
+            <div id="countdown-overlay">
+                <div id="countdown-text">3</div>
+            </div>
+
             <canvas id="game-board" width="220" height="500"></canvas>
 
             <div class="side-panel">
@@ -425,7 +479,7 @@
                 <div>
                     <button id="skill-btn" class="btn" onclick="useUltimateSkill()">一鍵全清 [Q] (剩1次)</button>
                     <button id="bomb-btn" class="btn" onclick="activateBombSkill()">集群炸彈 [E] (剩20次)</button>
-                    <button id="start-btn" class="btn" onclick="startGame()">開始遊戲</button>
+                    <button id="start-btn" class="btn" onclick="triggerStartCountdown()">開始遊戲</button>
                 </div>
 
                 <div class="instructions">
@@ -437,20 +491,17 @@
         </div>
     </div>
 
-    <!-- 📱 行動裝置虛擬控制按鍵區 (已對調旋轉與瞬落) -->
     <div class="mobile-controls">
         <div class="touch-row">
             <button class="t-btn t-skill" id="m-skill-q" onclick="useUltimateSkill()">全清Q</button>
             <button class="t-btn t-skill" id="m-skill-e" onclick="activateBombSkill()" style="border-color:#e67e22;">炸彈E</button>
         </div>
         <div class="touch-row">
-            <!-- 左手組：移動與旋轉變形 -->
             <div class="touch-group">
                 <button class="t-btn" onclick="handleMobileInput('left')">◀</button>
                 <button class="t-btn" onclick="handleMobileInput('right')">▶</button>
                 <button class="t-btn t-action" onclick="handleMobileInput('rotate')" style="width:60px; height:60px; font-size:16px;">旋轉</button>
             </div>
-            <!-- 右手組：下落速度控制 -->
             <div class="touch-group">
                 <button class="t-btn" onclick="handleMobileInput('down')" style="background:rgba(255,255,255,0.1);">▼</button>
                 <button class="t-btn t-action" onclick="handleMobileInput('drop')" style="border-color:#00f5ff; font-size:15px;">瞬落</button>
@@ -458,32 +509,44 @@
         </div>
     </div>
 
-    <!-- 開局首頁操作教學彈窗 -->
     <div id="welcome-modal" class="modal" style="display: flex;">
         <div class="modal-content" style="border-color: #00f5ff; box-shadow: 0 0 35px #00f5ff;">
             <h2 style="color: #00f5ff; margin-top: 0; letter-spacing: 2px;">🌙 徹夜之歌：夜行方塊</h2>
-            <p style="font-size: 14px; color: #b2bec3; line-height: 1.5; margin-bottom: 0;">歡迎來到深夜的世界。在左側選擇你的夜行夥伴，一起打破長夜的方塊吧！</p>
+            <p style="font-size: 13px; color: #b2bec3; line-height: 1.4; margin-bottom: 0;">歡迎來到深夜的世界。請依照以下步驟開始吸血鬼的叛逆夜行：</p>
             
+            <div class="step-container">
+                <div class="step-item">
+                    <span class="step-badge">STEP 1</span>
+                    <strong>選擇夜行夥伴：</strong>
+                    <span style="color:#bdc3c7;">點擊後方的卡片可在<b>七草薺</b>與<b>夜守更</b>之間切換，他們會給予你不同的互動台詞喔。</span>
+                </div>
+                <div class="step-item">
+                    <span class="step-badge">STEP 2</span>
+                    <strong>熟悉按鍵配置：</strong>
+                    <span style="color:#bdc3c7;">手機版左手控移動與旋轉、右手控下落。電腦版可用鍵盤方向鍵、WASD與Q/E技能鍵。</span>
+                </div>
+                <div class="step-item">
+                    <span class="step-badge cyan">STEP 3</span>
+                    <strong>善用專屬特技：</strong>
+                    <span style="color:#a29bfe;">遇到危險時，按下 <b>全清 [Q]</b> 能淨化整個世界；使用 <b>炸彈 [E]</b> 能引爆周圍方塊！</span>
+                </div>
+            </div>
+
             <div class="tutorial-grid">
                 <div>
-                    <div class="tutorial-title">左手操作</div>
+                    <div class="tutorial-title">左手配置</div>
                     <div style="color: #bdc3c7;">◀ ▶ 移動 + 旋轉形狀</div>
                 </div>
                 <div>
-                    <div class="tutorial-title">右手操作</div>
+                    <div class="tutorial-title">右手配置</div>
                     <div style="color: #bdc3c7;">▼ 加速落 / 瞬落接地</div>
-                </div>
-                <div>
-                    <div class="tutorial-title">夜行專屬技能</div>
-                    <div style="color: #a29bfe;">支援全清與九宮格炸彈</div>
                 </div>
             </div>
             
-            <button class="btn" style="background-color: #00f5ff; color:#000; padding: 12px; font-size: 16px; font-weight: 900;" onclick="closeWelcomeAndStart()">開始吸血鬼夜行</button>
+            <button class="btn" style="background-color: #00f5ff; color:#000; padding: 12px; font-size: 16px; font-weight: 900;" onclick="closeWelcomeAndStart()">確認步驟，開始倒數！</button>
         </div>
     </div>
 
-    <!-- 結算/晉級 彈窗 -->
     <div id="game-modal" class="modal">
         <div class="modal-content">
             <h2 id="modal-title">遊戲結束</h2>
@@ -513,6 +576,10 @@
         const bombBtn = document.getElementById('bomb-btn');
         const playerNameField = document.getElementById('player-name-field');
         const speechBubble = document.getElementById('char-speech');
+
+        // 倒數相關 DOM
+        const countdownOverlay = document.getElementById('countdown-overlay');
+        const countdownText = document.getElementById('countdown-text');
 
         const ROW = 20;
         const COL = 10;
@@ -561,6 +628,7 @@
         let gameOver = false;
         let gameRunning = false;
         let isPaused = false; 
+        let isCountingDown = false; // 追蹤是否正在進行開局倒數
         let currentModalIsLevelUp = false;
 
         let timerInterval = null;
@@ -841,7 +909,7 @@
         }
 
         function drop() {
-            if (gameOver || isPaused) return; 
+            if (gameOver || isPaused || isCountingDown) return; 
             if (!checkCollision(currentPiece.matrix, currentPiece.x, currentPiece.y + 1)) {
                 currentPiece.y++;
             } else {
@@ -868,7 +936,7 @@
         }
 
         function useUltimateSkill() {
-            if (!gameRunning || gameOver || isPaused || !skillAvailable) return;
+            if (!gameRunning || gameOver || isPaused || isCountingDown || !skillAvailable) return;
             initGrid();
             skillAvailable = false;
             score += 500; 
@@ -879,7 +947,7 @@
         }
 
         function activateBombSkill() {
-            if (!gameRunning || gameOver || isPaused || bombAmmo <= 0 || bombActive) return;
+            if (!gameRunning || gameOver || isPaused || isCountingDown || bombAmmo <= 0 || bombActive) return;
             bombActive = true;
             bombAmmo--;
             bombBtn.classList.add('skill-active');
@@ -924,7 +992,7 @@
             totalSeconds = 0;
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
-                if (!isPaused && gameRunning) { 
+                if (!isPaused && gameRunning && !isCountingDown) { 
                     totalSeconds++;
                     let mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
                     let secs = (totalSeconds % 60).toString().padStart(2, '0');
@@ -936,7 +1004,7 @@
 
         /* 📱 虛擬按鍵事件分流處理器 */
         function handleMobileInput(action) {
-            if (!gameRunning || gameOver || isPaused) return;
+            if (!gameRunning || gameOver || isPaused || isCountingDown) return;
             if (action === 'left') {
                 if (!checkCollision(currentPiece.matrix, currentPiece.x - 1, currentPiece.y)) { currentPiece.x--; draw(); }
             } else if (action === 'right') {
@@ -955,7 +1023,7 @@
             const affectedKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'w', 'W', 's', 'S', 'a', 'A', 'd', 'D', 'q', 'Q', 'e', 'E'];
             if (affectedKeys.includes(event.key)) event.preventDefault(); 
 
-            if (!gameRunning || gameOver || isPaused) return; 
+            if (!gameRunning || gameOver || isPaused || isCountingDown) return; 
             const key = event.key.toLowerCase();
 
             if (event.key === 'ArrowLeft' || key === 'a') {
@@ -978,10 +1046,22 @@
 
         function closeWelcomeAndStart() {
             document.getElementById('welcome-modal').style.display = 'none';
-            startGame();
+            triggerStartCountdown();
         }
 
-        function startGame() {
+        // ⏱️ 新增：處理 3, 2, 1 開局倒數功能
+        function triggerStartCountdown() {
+            // 如果原本在玩，先清理舊計時器
+            clearInterval(gameInterval);
+            clearInterval(timerInterval);
+            
+            isCountingDown = true;
+            countdownOverlay.style.display = 'flex';
+            
+            let count = 3;
+            countdownText.innerText = count;
+            
+            // 重置畫布與資料，讓玩家在倒數時可以看到乾淨的版面與第一個方塊
             initGrid();
             score = 0;
             level = 1;
@@ -992,19 +1072,32 @@
             bombAmmo = 20;
             bombActive = false;
             document.body.className = "lvl-1";
-            
             document.querySelector('#card-kou .char-name-tag').innerText = "KOU / 夜守更";
             bombBtn.classList.remove('skill-active');
             document.getElementById('m-skill-e').classList.remove('skill-active');
             
-            triggerSpeech('idle');
-            updateUI();
-            startTimer();
             initFirstPieces();
-            updateGameSpeed();
+            updateUI();
             draw();
 
-            document.getElementById('start-btn').innerText = "重新開始";
+            let countInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdownText.innerText = count;
+                } else if (count === 0) {
+                    countdownText.innerText = "GO!";
+                } else {
+                    clearInterval(countInterval);
+                    countdownOverlay.style.display = 'none';
+                    isCountingDown = false;
+                    
+                    // 倒數結束，正式啟動遊戲計時與核心落下機制
+                    startTimer();
+                    updateGameSpeed();
+                    triggerSpeech('idle');
+                    document.getElementById('start-btn').innerText = "重新開始";
+                }
+            }, 1000);
         }
 
         function endGame(isWin) {
@@ -1062,7 +1155,7 @@
             const name = playerNameField.value;
             saveScore(name, score);
             closeModal();
-            startGame();
+            triggerStartCountdown();
         }
 
         function closeModal() {
